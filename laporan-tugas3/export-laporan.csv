@@ -1,0 +1,18 @@
+﻿ID Setoran;Tanggal;Nasabah;Petugas;Kategori;Jenis Sampah;Berat (kg);Harga per kg;Subtotal
+1;2026-10-01;Siti Aminah;Hendra Kusuma;Kertas;Kardus;8,00;2000,00;16000,00
+1;2026-10-01;Siti Aminah;Hendra Kusuma;Plastik;Botol PET;5,00;3500,00;17500,00
+2;2026-10-03;Budi Santoso;Lilis Suryani;Logam;Besi tua;10,00;4000,00;40000,00
+2;2026-10-03;Budi Santoso;Lilis Suryani;Logam;Kaleng aluminium;2,50;9000,00;22500,00
+3;2026-10-05;Dewi Lestari;Hendra Kusuma;Kertas;Kardus;12,00;2000,00;24000,00
+3;2026-10-05;Dewi Lestari;Hendra Kusuma;Kertas;Kertas HVS;6,00;2500,00;15000,00
+4;2026-10-08;Siti Aminah;Taufik Hidayat;Kaca;Botol kaca;15,00;500,00;7500,00
+4;2026-10-08;Siti Aminah;Taufik Hidayat;Plastik;Gelas plastik;4,00;2500,00;10000,00
+5;2026-10-10;Rizky Pratama;Lilis Suryani;Elektronik;Kabel bekas;3,00;6000,00;18000,00
+5;2026-10-10;Rizky Pratama;Lilis Suryani;Plastik;Botol PET;7,50;3500,00;26250,00
+6;2026-10-12;Nur Hidayah;Mega Putri;Kertas;Kardus;20,00;2000,00;40000,00
+7;2026-10-15;Budi Santoso;Hendra Kusuma;Logam;Kaleng aluminium;1,50;9000,00;13500,00
+7;2026-10-15;Budi Santoso;Hendra Kusuma;Plastik;Botol PET;6,00;3500,00;21000,00
+8;2026-10-18;Agus Wijaya;Joko Susilo;Kaca;Botol kaca;10,00;500,00;5000,00
+8;2026-10-18;Agus Wijaya;Joko Susilo;Logam;Besi tua;25,00;4000,00;100000,00
+9;2026-11-19;Rina Wulandari;Hendra Kusuma;Kertas;Kardus;3,00;2000,00;6000,00
+9;2026-11-19;Rina Wulandari;Hendra Kusuma;Plastik;Botol PET;2,00;3750,00;7500,00

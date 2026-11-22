@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laporan Tugas 3 - Implementasi &amp; Deployment Bank Sampah Digital - Zian Mustofa</title>
+<style>
+  @page {
+    size: A4;
+    margin: 17mm 15mm 18mm 15mm;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 10.6pt;
+    color: #1f2328;
+    line-height: 1.52;
+    margin: 0;
+  }
+
+  h1 { font-size: 17pt; margin: 0 0 8pt 0; color: #0f3d2a; }
+  h2 {
+    font-size: 14pt;
+    color: #14532d;
+    border-bottom: 2.5px solid #14532d;
+    padding-bottom: 3pt;
+    margin: 0 0 10pt 0;
+    break-before: page;
+    page-break-before: always;
+  }
+  h2.first { break-before: auto; page-break-before: auto; }
+  h3 { font-size: 11.6pt; color: #166534; margin: 14pt 0 5pt 0; break-after: avoid; page-break-after: avoid; }
+  h4 { font-size: 10.6pt; color: #1f2937; margin: 10pt 0 4pt 0; break-after: avoid; page-break-after: avoid; }
+  p { margin: 0 0 7pt 0; text-align: justify; orphans: 3; widows: 3; }
+  li { margin-bottom: 3pt; text-align: justify; }
+  ul, ol { margin: 4pt 0 8pt 18pt; padding: 0; }
+  strong { color: #111827; }
+  code {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 9.2pt;
+    background: #eef2f0;
+    border: 1px solid #d8e1dc;
+    border-radius: 3px;
+    padding: 1px 3px;
+  }
+
+  table { border-collapse: collapse; margin: 7pt 0 11pt 0; width: 100%; }
+  th, td {
+    border: 1px solid #8a9490;
+    padding: 4px 6px;
+    font-size: 9.2pt;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #e4f0e9; color: #0f3d2a; font-weight: 600; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  .center { text-align: center; }
+  .nowrap { white-space: nowrap; }
+  .small { font-size: 8.6pt; }
+  .muted { color: #5b6560; }
+
+  .code {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 9px 11px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 8.4pt;
+    line-height: 1.38;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 7pt 0;
+    break-inside: avoid;
+  }
+  .termbar {
+    background: #23262b;
+    color: #aab3ad;
+    font-family: Consolas, monospace;
+    font-size: 8.2pt;
+    padding: 5px 11px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #3a3f44;
+    border-bottom: none;
+    margin: 8pt 0 0 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .term {
+    background: #14161a;
+    color: #d6dadd;
+    border-radius: 0 0 6px 6px;
+    border: 1px solid #3a3f44;
+    padding: 9px 11px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 7.9pt;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0 0 10pt 0;
+    break-inside: avoid;
+  }
+
+  .note {
+    background: #fff9e6;
+    border-left: 4px solid #c99500;
+    padding: 7px 11px;
+    font-size: 9.6pt;
+    margin: 9pt 0;
+    break-inside: avoid;
+  }
+  .okbox {
+    background: #eaf7ef;
+    border-left: 4px solid #15803d;
+    padding: 7px 11px;
+    font-size: 9.6pt;
+    margin: 9pt 0;
+    break-inside: avoid;
+  }
+
+  .figure {
+    margin: 8pt 0 12pt 0;
+    text-align: center;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .figure img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    max-height: 96mm;
+    border: 1px solid #cfd8d3;
+    border-radius: 5px;
+  }
+  .figure.hero img { max-height: 140mm; }
+  .figure.tall img { max-height: 128mm; }
+  .figure.report img { max-height: 108mm; }
+  .caption {
+    font-size: 8.8pt;
+    color: #5b6560;
+    text-align: center;
+    font-style: italic;
+    margin-top: 4pt;
+  }
+
+  /* ---------- Sampul ---------- */
+  .cover {
+    min-height: 244mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    break-after: page;
+    page-break-after: always;
+  }
+  .cover .badge {
+    align-self: center;
+    background: #14532d;
+    color: #d9f99d;
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 2.2px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 26pt;
+  }
+  .cover h1 { font-size: 23pt; line-height: 1.25; margin: 0 0 8pt 0; }
+  .cover .sub {
+    font-size: 14.5pt;
+    color: #14532d;
+    font-weight: 600;
+    margin: 0 auto 8pt auto;
+    max-width: 150mm;
+    line-height: 1.35;
+  }
+  .cover .sub2 {
+    font-size: 11pt;
+    color: #4b5563;
+    margin: 0 auto 30pt auto;
+    max-width: 168mm;
+  }
+  .cover .rule {
+    width: 58mm;
+    height: 3px;
+    background: #84cc16;
+    margin: 0 auto 26pt auto;
+  }
+  .cover .ident {
+    font-size: 11.5pt;
+    line-height: 1.85;
+    color: #1f2937;
+    margin: 0 auto 26pt auto;
+  }
+  .cover .ident b { color: #0f3d2a; }
+  .cover .tech {
+    align-self: center;
+    border: 1px solid #cfd8d3;
+    border-radius: 8px;
+    padding: 10px 20px;
+    background: #f6faf7;
+    font-size: 9.4pt;
+    line-height: 1.7;
+    color: #374151;
+    max-width: 160mm;
+  }
+  .cover .url {
+    margin-top: 18pt;
+    font-size: 10pt;
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    margin: 8pt 0 11pt 0;
+  }
+  .kpi {
+    border: 1px solid #cfd8d3;
+    border-top: 3px solid #15803d;
+    border-radius: 5px;
+    padding: 7px 8px;
+    background: #f8fbf9;
+  }
+  .kpi .label { font-size: 8pt; color: #5b6560; text-transform: uppercase; letter-spacing: .5px; }
+  .kpi .value { font-size: 13pt; font-weight: 700; color: #0f3d2a; margin-top: 2pt; }
+
+  .toc { margin: 8pt 0 0 8pt; font-size: 10.4pt; line-height: 1.85; }
+  .toc div { border-bottom: 1px dotted #c7d0cb; padding: 2pt 0; }
+
+  .avoid { break-inside: avoid; page-break-inside: avoid; }
+
+  svg text { font-family: 'Segoe UI', Arial, sans-serif; }
+  .diagram-wrap {
+    border: 1px solid #d8e1dc;
+    border-radius: 6px;
+    padding: 8px;
+    background: #fbfdfc;
+    margin: 7pt 0 12pt 0;
+    break-inside: avoid;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SAMPUL ==================== -->
+<div class="cover">
+  <div class="badge">LAPORAN TUGAS 3</div>
+  <h1>IMPLEMENTASI &amp; DEPLOYMENT<br>APLIKASI WEB</h1>
+  <div class="sub">Sistem Informasi Bank Sampah Digital</div>
+  <div class="sub2">Implementasi basis data PostgreSQL, antarmuka web operasional, pengujian <i>end-to-end</i>, dan publikasi aplikasi pada URL publik</div>
+  <div class="rule"></div>
+
+  <div class="ident">
+    Disusun oleh:<br>
+    <b>Nama&nbsp;&nbsp;: Zian Mustofa</b><br>
+    <b>Kelas&nbsp;&nbsp;&nbsp;: TIF 3A</b><br>
+    <b>NIM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 25080960002</b><br>
+    <b>Tahun Akademik: 2026/2027</b>
+  </div>
+
+  <div class="tech">
+    <b>Teknologi:</b> Next.js 16.4.6 (App Router, TypeScript, Tailwind CSS 4) &middot;
+    PostgreSQL 18.7 pada Neon Serverless &middot; Vercel<br>
+    <b>Database:</b> 7 tabel, 3 view, 1 trigger perlindungan saldo &middot; 52 baris data awal<br>
+    <b>Pengujian:</b> 11 skenario end-to-end Playwright (11 lulus, 0 gagal)
+  </div>
+
+  <div class="url">https://bank-sampah-digital-rust.vercel.app</div>
+</div>
+
+<!-- ==================== DAFTAR ISI ==================== -->
+<h2 class="first">Daftar Isi</h2>
+<p>Laporan ini mendokumentasikan kelanjutan Tugas 1 (perancangan basis data) dan Tugas 2 (analisis sistem) menjadi aplikasi web yang benar-benar berjalan, terhubung ke basis data PostgreSQL, diuji secara end-to-end, dan dipublikasikan pada URL publik.</p>
+
+<div class="toc">
+  <div><b>1.</b> Ringkasan Pelaksanaan &amp; Analisis Kebutuhan</div>
+  <div><b>2.</b> Arsitektur Sistem &amp; Teknologi</div>
+  <div><b>3.</b> Implementasi Basis Data PostgreSQL</div>
+  <div><b>4.</b> Implementasi Antarmuka &amp; Lima Fitur Utama</div>
+  <div><b>5.</b> Pengujian Sistem (Black-Box End-to-End)</div>
+  <div><b>6.</b> Deployment &amp; Akses Publik</div>
+  <div><b>7.</b> Kesimpulan &amp; Saran</div>
+  <div><b>Lampiran A.</b> Cara Menjalankan Aplikasi</div>
+  <div><b>Lampiran B.</b> Inventaris Berkas Penting</div>
+</div>
+
+<h3>Ringkasan Capaian</h3>
+<table>
+  <thead>
+    <tr><th style="width:30%">Persyaratan tugas</th><th style="width:38%">Bukti implementasi</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Basis data dari rancangan Tugas 1</td><td>7 tabel, 3 view, 1 trigger, constraint PK/FK/CHECK/UNIQUE pada PostgreSQL 18.7</td><td><b>Terpenuhi</b></td></tr>
+    <tr><td>Antarmuka web yang dapat digunakan</td><td>6 halaman operasional: dashboard, nasabah, jenis sampah, setoran, penarikan, laporan</td><td><b>Terpenuhi</b></td></tr>
+    <tr><td>Lima fitur relevan dengan bisnis</td><td>Dashboard analitik, manajemen nasabah, master harga, setoran multi-jenis, penarikan saldo tervalidasi</td><td><b>Terpenuhi</b></td></tr>
+    <tr><td>Pengujian sistem</td><td>11 skenario black-box Playwright; 11 lulus, 0 gagal; hasil tersimpan pada <code>tests/results.json</code></td><td><b>Terpenuhi</b></td></tr>
+    <tr><td>Akses publik</td><td><code>https://bank-sampah-digital-rust.vercel.app</code> (HTTP 200, tanpa login)</td><td><b>Terpenuhi</b></td></tr>
+    <tr><td>Laporan dengan tangkapan layar</td><td>Dokumen ini, 12 gambar, tabel pengujian, dan bukti deployment</td><td><b>Terpenuhi</b></td></tr>
+  </tbody>
+</table>
+
+<div class="okbox">
+  <b>Hasil singkat.</b> Aplikasi mengelola 7 nasabah, 9 transaksi setoran, 17 baris rincian setoran, dan 6 penarikan.
+  Total nilai setoran <b>Rp 389.750</b>, total penarikan <b>Rp 150.000</b>, dan saldo tersimpan <b>Rp 239.750</b>
+  dari akumulasi berat <b>140,5 kg</b>. Seluruh angka tersebut berasal dari basis data produksi, bukan data statis pada tampilan.
+</div>
+
+<!-- ==================== 1 ==================== -->
+<h2>1. Ringkasan Pelaksanaan &amp; Analisis Kebutuhan</h2>
+
+<h3>1.1 Latar Belakang</h3>
+<p>Bank sampah mencatat aktivitas warga menyetorkan sampah, mengubah berat sampah menjadi saldo, lalu melayani penarikan saldo. Pencatatan manual rentan menimbulkan selisih nilai, kehilangan riwayat, dan kesalahan saldo. Pada Tugas 1 telah dirancang basis data relasional dengan tujuh tabel; pada Tugas 2 telah dianalisis kebutuhan dan alur bisnisnya. Tugas 3 menuntut rancangan tersebut menjadi sistem informasi berbasis web yang dapat diakses publik, diuji, dan didokumentasikan.</p>
+<p>Implementasi mempertahankan keputusan desain penting dari Tugas 1, yaitu <b>harga snapshot</b> pada rincian setoran dan <b>saldo yang dihitung</b> dari selisih setoran dan penarikan. Dengan demikian, perubahan harga master tidak mengubah nilai transaksi lama, dan saldo selalu konsisten tanpa kolom saldo yang redundan.</p>
+
+<h3>1.2 Tujuan Implementasi</h3>
+<ol>
+  <li>Menerapkan rancangan basis data Tugas 1 ke DBMS PostgreSQL yang berjalan di cloud.</li>
+  <li>Membangun antarmuka web untuk seluruh proses operasional bank sampah.</li>
+  <li>Menyediakan lima fitur utama yang memberi nilai bisnis nyata, bukan sekadar CRUD.</li>
+  <li>Menjamin validitas data melalui validasi aplikasi, transaksi database, constraint, dan trigger.</li>
+  <li>Menguji sistem dengan skenario black-box dan mempublikasikannya pada URL publik.</li>
+</ol>
+
+<h3>1.3 Kebutuhan Fungsional</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Kode</th><th style="width:24%">Fungsi</th><th style="width:40%">Perilaku yang diharapkan</th><th>Pengguna</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>F01</td><td>Dashboard operasional</td><td>Menampilkan jumlah nasabah, berat sampah, nilai setoran, saldo tersimpan, tren enam bulan, komposisi kategori, nasabah teraktif, dan setoran terbaru.</td><td>Petugas / pengelola</td></tr>
+    <tr><td>F02</td><td>Manajemen nasabah</td><td>Mencari, menambah, mengubah, dan menghapus nasabah; nomor HP unik; riwayat transaksi dan saldo tampil pada halaman detail.</td><td>Petugas administrasi</td></tr>
+    <tr><td>F03</td><td>Master jenis sampah &amp; harga</td><td>Mengelola kategori dan jenis sampah, mengubah harga per kilogram, serta menampilkan volume dan frekuensi pemakaian tiap jenis.</td><td>Pengelola master data</td></tr>
+    <tr><td>F04</td><td>Setoran multi-jenis</td><td>Satu transaksi dapat berisi beberapa jenis sampah; subtotal dan total dihitung otomatis; harga disimpan sebagai snapshot.</td><td>Petugas penimbang</td></tr>
+    <tr><td>F05</td><td>Penarikan saldo</td><td>Penarikan divalidasi terhadap saldo tersedia; nominal melebihi saldo ditolak dengan pesan jelas; saldo langsung diperbarui.</td><td>Petugas kasir</td></tr>
+    <tr><td>F06</td><td>Laporan periodik</td><td>Merekap transaksi, berat, nilai, kategori, nasabah teraktif, dan kinerja petugas berdasarkan rentang tanggal.</td><td>Pengelola</td></tr>
+    <tr><td>F07</td><td>Ekspor CSV</td><td>Mengunduh rincian setoran pada periode terpilih dalam berkas CSV yang dapat dibuka di Excel.</td><td>Pengelola</td></tr>
+  </tbody>
+</table>
+
+<h3>1.4 Kebutuhan Non-Fungsional</h3>
+<table>
+  <thead>
+    <tr><th style="width:24%">Aspek</th><th>Target dan cara pemenuhan</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Akses publik</td><td>Aplikasi dapat dibuka tanpa login pada perangkat dan jaringan mana pun melalui URL Vercel; proteksi Vercel Authentication dinonaktifkan secara sengaja karena fokus tugas adalah alur bisnis.</td></tr>
+    <tr><td>Responsif</td><td>Tata letak menggunakan grid Tailwind dan menyesuaikan lebar layar; navigasi tetap dapat dipakai pada layar kecil.</td></tr>
+    <tr><td>Integritas data</td><td>Validasi di lapisan server, transaksi <code>BEGIN/COMMIT/ROLLBACK</code>, foreign key, constraint <code>CHECK</code>, indeks unik, dan trigger saldo.</td></tr>
+    <tr><td>Kinerja</td><td>Query agregasi langsung di PostgreSQL, connection pool yang dipakai ulang, indeks pada kolom tanggal dan foreign key, serta halaman laporan yang tidak memuat data berlebihan.</td></tr>
+    <tr><td>Keamanan dasar</td><td>Query parameterized (<code>$1</code>, <code>$2</code>, ...) untuk mencegah SQL injection; kredensial hanya berada pada environment variable, tidak ditulis di kode atau laporan.</td></tr>
+    <tr><td>Portabilitas</td><td>Seluruh skema dan data awal dapat dibangun ulang dengan satu perintah <code>npm run db:init</code>.</td></tr>
+  </tbody>
+</table>
+
+<h3>1.5 Batasan Implementasi</h3>
+<ul>
+  <li>Aplikasi belum memiliki autentikasi dan otorisasi per peran; seluruh pengunjung dianggap operator tunggal. Hal ini disesuaikan dengan fokus tugas pada implementasi basis data dan alur bisnis.</li>
+  <li>Data yang digunakan adalah data simulasi Tugas 1 ditambah data uji end-to-end. Tidak ada data warga sungguhan.</li>
+  <li>Lingkungan produksi memakai paket gratis Neon dan Vercel, sehingga koneksi pertama setelah periode idle dapat lebih lambat (cold start).</li>
+  <li>Transaksi keuangan belum terhubung ke payment gateway; saldo adalah catatan internal bank sampah.</li>
+</ul>
+
+<!-- ==================== 2 ==================== -->
+<h2>2. Arsitektur Sistem &amp; Teknologi</h2>
+
+<h3>2.1 Arsitektur Tiga Lapis</h3>
+<p>Aplikasi memakai arsitektur tiga lapis. Browser hanya menerima HTML, CSS, dan JavaScript yang sudah dirender; logika bisnis berjalan di server Next.js pada Vercel; data disimpan pada PostgreSQL di Neon. Koneksi database menggunakan <i>connection pool</i> dan hanya dibuka dari sisi server sehingga kredensial tidak pernah dikirim ke browser.</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 980 330" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4b5563"/>
+    </marker>
+  </defs>
+
+  <!-- Browser -->
+  <rect x="20" y="78" width="205" height="150" rx="9" fill="#f8fbf9" stroke="#14532d" stroke-width="1.6"/>
+  <rect x="20" y="78" width="205" height="34" rx="9" fill="#14532d"/>
+  <rect x="20" y="100" width="205" height="12" fill="#14532d"/>
+  <text x="122" y="101" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">BROWSER</text>
+  <text x="122" y="137" text-anchor="middle" fill="#1f2937" font-size="11.5">Chrome / Edge / Safari</text>
+  <text x="122" y="158" text-anchor="middle" fill="#4b5563" font-size="11">HTML + CSS + React UI</text>
+  <text x="122" y="179" text-anchor="middle" fill="#4b5563" font-size="11">Form, pencarian, unduh CSV</text>
+  <text x="122" y="200" text-anchor="middle" fill="#4b5563" font-size="11">HTTPS</text>
+
+  <!-- Vercel -->
+  <rect x="300" y="40" width="350" height="226" rx="9" fill="#f8fbf9" stroke="#14532d" stroke-width="1.6"/>
+  <rect x="300" y="40" width="350" height="34" rx="9" fill="#166534"/>
+  <rect x="300" y="62" width="350" height="12" fill="#166534"/>
+  <text x="475" y="63" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">VERCEL — NEXT.JS 16</text>
+
+  <rect x="322" y="88" width="306" height="38" rx="5" fill="#ffffff" stroke="#86a995"/>
+  <text x="475" y="112" text-anchor="middle" fill="#1f2937" font-size="11.5">App Router: Server Components &amp; Pages</text>
+
+  <rect x="322" y="136" width="306" height="38" rx="5" fill="#ffffff" stroke="#86a995"/>
+  <text x="475" y="160" text-anchor="middle" fill="#1f2937" font-size="11.5">Server Actions: validasi &amp; mutasi data</text>
+
+  <rect x="322" y="184" width="306" height="38" rx="5" fill="#ffffff" stroke="#86a995"/>
+  <text x="475" y="208" text-anchor="middle" fill="#1f2937" font-size="11.5">Query layer (pg) &amp; transaksi database</text>
+
+  <rect x="322" y="232" width="306" height="24" rx="5" fill="#ecfdf3" stroke="#86a995"/>
+  <text x="475" y="248" text-anchor="middle" fill="#166534" font-size="10.5">Connection pool (max 5) + attachDatabasePool</text>
+
+  <!-- Neon -->
+  <rect x="725" y="85" width="235" height="165" rx="9" fill="#f8fbf9" stroke="#14532d" stroke-width="1.6"/>
+  <rect x="725" y="85" width="235" height="34" rx="9" fill="#0f3d2a"/>
+  <rect x="725" y="107" width="235" height="12" fill="#0f3d2a"/>
+  <text x="842" y="108" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">NEON POSTGRESQL</text>
+  <text x="842" y="142" text-anchor="middle" fill="#1f2937" font-size="11.5">PostgreSQL 18.7 — region sin1</text>
+  <text x="842" y="164" text-anchor="middle" fill="#4b5563" font-size="11">7 tabel relasional</text>
+  <text x="842" y="185" text-anchor="middle" fill="#4b5563" font-size="11">3 view rekap &amp; saldo</text>
+  <text x="842" y="206" text-anchor="middle" fill="#4b5563" font-size="11">1 trigger perlindungan saldo</text>
+  <text x="842" y="229" text-anchor="middle" fill="#4b5563" font-size="11">Constraint, index, transaksi</text>
+
+  <!-- arrows -->
+  <line x1="225" y1="135" x2="296" y2="135" stroke="#4b5563" stroke-width="1.7" marker-end="url(#arrow)"/>
+  <text x="260" y="124" text-anchor="middle" fill="#374151" font-size="10">HTTPS</text>
+
+  <line x1="225" y1="180" x2="296" y2="180" stroke="#4b5563" stroke-width="1.7" marker-end="url(#arrow)"/>
+  <text x="260" y="199" text-anchor="middle" fill="#374151" font-size="10">respons</text>
+
+  <line x1="650" y1="160" x2="721" y2="160" stroke="#4b5563" stroke-width="1.7" marker-end="url(#arrow)"/>
+  <text x="686" y="149" text-anchor="middle" fill="#374151" font-size="10">SQL</text>
+  <text x="686" y="178" text-anchor="middle" fill="#374151" font-size="10">TLS</text>
+</svg>
+</div>
+<div class="caption" style="margin-top:-6pt;margin-bottom:10pt">Gambar arsitektur: browser &rarr; Next.js pada Vercel &rarr; PostgreSQL pada Neon.</div>
+
+<h3>2.2 Teknologi yang Digunakan</h3>
+<table>
+  <thead>
+    <tr><th style="width:24%">Lapisan</th><th style="width:30%">Teknologi / versi</th><th>Alasan pemilihan</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Antarmuka</td><td>Next.js 16.4.6, React 19.3.1, TypeScript 7.0.2, Tailwind CSS 4.3.5</td><td>Server Components mengurangi JavaScript klien, App Router mempermudah pemisahan halaman, dan Tailwind mempercepat pembuatan antarmuka konsisten.</td></tr>
+    <tr><td>Logika server</td><td>Next.js Server Actions, Node.js 26.x</td><td>Form dapat mengirim mutasi tanpa membuat API terpisah; validasi tetap berjalan di server dan tidak dapat dilewati dari browser.</td></tr>
+    <tr><td>Akses database</td><td><code>pg</code> 8.23.1, SQL mentah</td><td>SQL eksplisit memperlihatkan penerapan DDL, join, agregasi, view, dan transaksi; tanpa ORM agar sesuai tujuan mata kuliah basis data.</td></tr>
+    <tr><td>Basis data</td><td>PostgreSQL 18.7 di Neon (region <code>sin1</code>)</td><td>Open source, mendukung constraint, view, trigger PL/pgSQL, serta cocok untuk serverless karena koneksi pooled.</td></tr>
+    <tr><td>Hosting</td><td>Vercel (production)</td><td>Deployment langsung dari CLI, TLS otomatis, URL publik, dan integrasi environment variable dengan Neon.</td></tr>
+    <tr><td>Pengujian</td><td>Playwright 1.65.1 (Chromium)</td><td>Menguji alur nyata dari sisi pengguna pada aplikasi produksi, termasuk validasi dan unduhan CSV.</td></tr>
+  </tbody>
+</table>
+
+<h3>2.3 Struktur Proyek</h3>
+<div class="code">bank-sampah-web/
+├── db/
+│   ├── schema.sql          # 7 tabel, 3 view, trigger saldo, index
+│   └── seed.sql            # 52 baris data awal Tugas 1
+├── scripts/
+│   └── db-init.mjs         # membangun ulang skema + seed
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                  # dashboard
+│   │   ├── nasabah/                  # daftar, detail, actions
+│   │   ├── sampah/                   # master kategori, jenis, harga
+│   │   ├── setoran/                  # riwayat, form baru, detail
+│   │   ├── penarikan/                # form & riwayat penarikan
+│   │   ├── laporan/                  # rekap periodik
+│   │   └── api/health, api/laporan/csv
+│   ├── components/         # sidebar, form, kartu statistik, UI
+│   └── lib/                # koneksi pg, query, format, tipe
+├── tests/
+│   ├── e2e.mjs             # 11 skenario Playwright
+│   └── results.json        # hasil pengujian produksi
+├── vercel.json
+└── package.json</div>
+
+<h3>2.4 Alur Permintaan dan Mutasi</h3>
+<ol>
+  <li><b>Baca data.</b> Browser meminta halaman; Server Component memanggil fungsi pada <code>src/lib/queries.ts</code>, yang menjalankan SQL parameterized ke PostgreSQL, lalu merender HTML.</li>
+  <li><b>Kirim form.</b> Form nasabah, setoran, atau penarikan memanggil Server Action. Action memvalidasi input, mengambil harga master bila perlu, lalu menjalankan mutasi.</li>
+  <li><b>Transaksi.</b> Setoran ditulis sebagai header dan beberapa baris detail dalam satu transaksi. Bila satu baris gagal, seluruh setoran dibatalkan.</li>
+  <li><b>Validasi berlapis.</b> Penarikan diperiksa di aplikasi, dikunci per nasabah, lalu diperiksa lagi oleh trigger database sebelum baris disimpan.</li>
+  <li><b>Segarkan tampilan.</b> Setelah berhasil, <code>revalidatePath</code> membersihkan cache halaman terkait dan pengguna diarahkan ke halaman bukti atau pesan sukses.</li>
+</ol>
+
+<h3>2.5 Keputusan Teknis Penting</h3>
+<table>
+  <thead><tr><th style="width:26%">Keputusan</th><th>Dampak</th></tr></thead>
+  <tbody>
+    <tr><td>SQL mentah, tanpa ORM</td><td>Struktur tabel, relasi, view, dan trigger terlihat langsung; query agregasi laporan dapat ditulis sesuai kebutuhan.</td></tr>
+    <tr><td>Harga diambil ulang di server</td><td>Harga dari browser tidak dipercaya. Server membaca <code>jenis_sampah.harga_per_kg</code> lalu menyimpannya ke <code>detail_setoran.harga_satuan</code> sebagai snapshot.</td></tr>
+    <tr><td>Saldo sebagai view</td><td><code>v_saldo_nasabah</code> menghitung total setoran dikurangi total penarikan, sehingga tidak ada saldo ganda yang perlu disinkronkan.</td></tr>
+    <tr><td>Trigger sebagai pengaman terakhir</td><td>Meskipun aplikasi memiliki bug atau ada klien lain, database tetap menolak penarikan yang melebihi saldo.</td></tr>
+    <tr><td>DATE dibaca sebagai string</td><td>Parser tipe 1082 dikustomisasi agar tanggal tidak bergeser akibat perbedaan zona waktu server (UTC) dan pengguna (WIB).</td></tr>
+  </tbody>
+</table>
+
+<!-- ==================== 3 ==================== -->
+<h2>3. Implementasi Basis Data PostgreSQL</h2>
+
+<h3>3.1 Struktur Tabel</h3>
+<p>Rancangan Tugas 1 dipindahkan ke PostgreSQL tanpa mengurangi relasi. Tujuh tabel tetap terdiri atas empat tabel master dan tiga tabel transaksi. Nama tabel, primary key, dan foreign key dipertahankan agar laporan Tugas 1 dan implementasi Tugas 3 dapat dibaca sebagai satu kesatuan.</p>
+<table>
+  <thead>
+    <tr><th style="width:18%">Tabel</th><th style="width:17%">Primary key</th><th style="width:23%">Foreign key</th><th>Atribut penting</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>kategori_sampah</td><td>id_kategori</td><td>&mdash;</td><td>nama_kategori (unik), deskripsi</td></tr>
+    <tr><td>jenis_sampah</td><td>id_jenis</td><td>id_kategori &rarr; kategori_sampah</td><td>nama_jenis (unik), harga_per_kg &ge; 0</td></tr>
+    <tr><td>nasabah</td><td>id_nasabah</td><td>&mdash;</td><td>nama, alamat, no_hp (unik), tgl_daftar</td></tr>
+    <tr><td>petugas</td><td>id_petugas</td><td>&mdash;</td><td>nama_petugas, jabatan, no_hp (unik)</td></tr>
+    <tr><td>setoran</td><td>id_setoran</td><td>id_nasabah, id_petugas</td><td>tgl_setoran, catatan</td></tr>
+    <tr><td>detail_setoran</td><td>id_detail</td><td>id_setoran, id_jenis</td><td>berat_kg &gt; 0, harga_satuan &gt; 0 (snapshot)</td></tr>
+    <tr><td>penarikan_saldo</td><td>id_penarikan</td><td>id_nasabah, id_petugas</td><td>tgl_penarikan, jumlah &gt; 0</td></tr>
+  </tbody>
+</table>
+
+<h3>3.2 Penyesuaian Tipe Data MySQL &rarr; PostgreSQL</h3>
+<table>
+  <thead><tr><th style="width:28%">MySQL (Tugas 1)</th><th style="width:30%">PostgreSQL (implementasi)</th><th>Keterangan</th></tr></thead>
+  <tbody>
+    <tr><td><code>INT AUTO_INCREMENT</code></td><td><code>INTEGER GENERATED BY DEFAULT AS IDENTITY</code></td><td>Primary key sekaligus memungkinkan pemuatan ID eksplisit dari seed.</td></tr>
+    <tr><td><code>DECIMAL(10,2)</code></td><td><code>NUMERIC(10,2)</code></td><td>Nilai uang dan berat disimpan tepat, tanpa pembulatan floating point.</td></tr>
+    <tr><td><code>VARCHAR(n)</code></td><td><code>VARCHAR(n)</code></td><td>Tetap sama; panjang disesuaikan dengan validasi aplikasi.</td></tr>
+    <tr><td><code>DATE</code></td><td><code>DATE</code></td><td>Tanggal transaksi tidak memerlukan komponen waktu.</td></tr>
+    <tr><td><code>ON DELETE RESTRICT</code></td><td><code>ON DELETE RESTRICT</code></td><td>Mencegah penghapusan data master yang masih dipakai transaksi.</td></tr>
+    <tr><td>Trigger saldo (MySQL)</td><td>Fungsi <code>PL/pgSQL</code> + <code>BEFORE INSERT</code> trigger</td><td>Aturan bisnis yang sama, ditulis ulang sesuai dialek PostgreSQL.</td></tr>
+    <tr><td>View rekap</td><td>3 view PostgreSQL</td><td><code>v_saldo_nasabah</code>, <code>v_rekap_kategori</code>, <code>v_riwayat_setoran</code>.</td></tr>
+  </tbody>
+</table>
+
+<h3>3.3 Cuplikan DDL</h3>
+<p>Berikut bagian skema yang paling menentukan integritas data. Seluruh definisi lengkap berada pada <code>db/schema.sql</code>.</p>
+
+<div class="code">CREATE TABLE detail_setoran (
+    id_detail    INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    id_setoran   INTEGER NOT NULL,
+    id_jenis     INTEGER NOT NULL,
+    berat_kg     NUMERIC(8,2)  NOT NULL CHECK (berat_kg &gt; 0),
+    harga_satuan NUMERIC(10,2) NOT NULL CHECK (harga_satuan &gt; 0),
+    CONSTRAINT fk_detail_setoran FOREIGN KEY (id_setoran)
+        REFERENCES setoran(id_setoran) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_detail_jenis FOREIGN KEY (id_jenis)
+        REFERENCES jenis_sampah(id_jenis) ON UPDATE CASCADE ON DELETE RESTRICT
+);</div>
+
+<div class="code">CREATE OR REPLACE FUNCTION fn_cek_saldo_penarikan() RETURNS TRIGGER AS $$
+DECLARE
+    saldo_ada NUMERIC(14,2);
+BEGIN
+    SELECT
+        COALESCE((SELECT SUM(d.berat_kg * d.harga_satuan)
+                  FROM setoran st
+                  JOIN detail_setoran d ON st.id_setoran = d.id_setoran
+                  WHERE st.id_nasabah = NEW.id_nasabah), 0)
+      - COALESCE((SELECT SUM(jumlah)
+                  FROM penarikan_saldo
+                  WHERE id_nasabah = NEW.id_nasabah), 0)
+    INTO saldo_ada;
+
+    IF NEW.jumlah &gt; saldo_ada THEN
+        RAISE EXCEPTION 'PENARIKAN DITOLAK: saldo tidak mencukupi (tersedia %)', saldo_ada
+            USING ERRCODE = '45000';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_penarikan_cek_saldo
+    BEFORE INSERT ON penarikan_saldo
+    FOR EACH ROW EXECUTE FUNCTION fn_cek_saldo_penarikan();</div>
+
+<div class="code">CREATE VIEW v_saldo_nasabah AS
+SELECT n.id_nasabah, n.nama, n.no_hp,
+       COALESCE(s.total_setor, 0) AS total_setor,
+       COALESCE(t.total_tarik, 0) AS total_tarik,
+       COALESCE(s.total_setor, 0) - COALESCE(t.total_tarik, 0) AS saldo
+FROM nasabah n
+LEFT JOIN (
+    SELECT st.id_nasabah, SUM(d.berat_kg * d.harga_satuan) AS total_setor
+    FROM setoran st
+    JOIN detail_setoran d ON st.id_setoran = d.id_setoran
+    GROUP BY st.id_nasabah
+) s ON n.id_nasabah = s.id_nasabah
+LEFT JOIN (
+    SELECT id_nasabah, SUM(jumlah) AS total_tarik
+    FROM penarikan_saldo
+    GROUP BY id_nasabah
+) t ON n.id_nasabah = t.id_nasabah;</div>
+
+<h3>3.4 Aturan Integritas yang Diterapkan</h3>
+<table>
+  <thead><tr><th style="width:25%">Aturan</th><th style="width:28%">Mekanisme</th><th>Perilaku saat dilanggar</th></tr></thead>
+  <tbody>
+    <tr><td>Nomor HP nasabah unik</td><td><code>UNIQUE(no_hp)</code> + pemeriksaan kode <code>23505</code></td><td>Sistem menampilkan pesan bahwa nomor HP sudah terdaftar.</td></tr>
+    <tr><td>Berat dan harga positif</td><td><code>CHECK (berat_kg &gt; 0)</code>, <code>CHECK (harga_satuan &gt; 0)</code></td><td>Baris ditolak database; aplikasi juga menolak input tidak wajar lebih awal.</td></tr>
+    <tr><td>Setoran harus milik nasabah dan petugas valid</td><td>Foreign key <code>RESTRICT</code></td><td>Data referensi tidak dapat dihapus selama masih dipakai.</td></tr>
+    <tr><td>Rincian ikut terhapus bersama setoran</td><td><code>ON DELETE CASCADE</code> pada <code>detail_setoran</code></td><td>Tidak ada rincian yatim tanpa header.</td></tr>
+    <tr><td>Penarikan tidak melebihi saldo</td><td>Validasi server + <code>FOR UPDATE</code> + trigger <code>BEFORE INSERT</code></td><td>Transaksi dibatalkan dengan pesan saldo tidak mencukupi.</td></tr>
+    <tr><td>Harga transaksi lama tidak berubah</td><td>Kolom <code>harga_satuan</code> pada detail</td><td>Perubahan harga master hanya berlaku untuk transaksi berikutnya.</td></tr>
+    <tr><td>Riwayat transaksi tidak hilang</td><td>Foreign key <code>RESTRICT</code> pada nasabah</td><td>Nasabah dengan riwayat tidak dapat dihapus; kode PostgreSQL <code>23001</code> dan <code>23503</code> ditangani.</td></tr>
+  </tbody>
+</table>
+
+<h3>3.5 View untuk Pelaporan</h3>
+<table>
+  <thead><tr><th style="width:25%">View</th><th>Isi dan pemanfaatan</th></tr></thead>
+  <tbody>
+    <tr><td><code>v_saldo_nasabah</code></td><td>Total setoran, total penarikan, dan saldo setiap nasabah. Dipakai pada daftar nasabah, halaman detail, form penarikan, serta laporan.</td></tr>
+    <tr><td><code>v_rekap_kategori</code></td><td>Total berat dan nilai per kategori. Menjadi dasar komposisi kategori pada dashboard dan rekap laporan.</td></tr>
+    <tr><td><code>v_riwayat_setoran</code></td><td>Gabungan header setoran, nasabah, petugas, kategori, jenis, berat, harga snapshot, dan subtotal. Dipakai untuk riwayat rinci dan ekspor CSV.</td></tr>
+  </tbody>
+</table>
+
+<h3>3.6 Data Awal dan Kondisi Akhir</h3>
+<p>Data awal berasal dari Tugas 1 sebanyak <b>52 baris</b>. Setelah pengujian end-to-end, ditambahkan satu nasabah (Rina Wulandari), satu setoran baru, dua baris detail, dan satu penarikan sah. Kondisi akhir basis data produksi adalah sebagai berikut.</p>
+<table>
+  <thead><tr><th>Tabel</th><th class="center">Baris awal</th><th class="center">Baris akhir</th><th>Keterangan</th></tr></thead>
+  <tbody>
+    <tr><td>kategori_sampah</td><td class="center">5</td><td class="center">5</td><td>Plastik, Kertas, Logam, Kaca, Elektronik</td></tr>
+    <tr><td>jenis_sampah</td><td class="center">8</td><td class="center">8</td><td>Harga Botol PET diperbarui menjadi Rp 3.750</td></tr>
+    <tr><td>nasabah</td><td class="center">6</td><td class="center">7</td><td>Ditambah Rina Wulandari</td></tr>
+    <tr><td>petugas</td><td class="center">5</td><td class="center">5</td><td>Hendra, Lilis, Taufik, Mega, Joko</td></tr>
+    <tr><td>setoran</td><td class="center">8</td><td class="center">9</td><td>Setoran #009 tanggal 19 November 2026</td></tr>
+    <tr><td>detail_setoran</td><td class="center">15</td><td class="center">17</td><td>Kardus 3 kg dan Botol PET 2 kg</td></tr>
+    <tr><td>penarikan_saldo</td><td class="center">5</td><td class="center">6</td><td>Penarikan sah Rp 5.000</td></tr>
+    <tr><th>Total</th><th class="center">52</th><th class="center">57</th><th>Selisih 5 baris berasal dari pengujian</th></tr>
+  </tbody>
+</table>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="label">Total setoran</div><div class="value">Rp 389.750</div></div>
+  <div class="kpi"><div class="label">Total penarikan</div><div class="value">Rp 150.000</div></div>
+  <div class="kpi"><div class="label">Saldo tersimpan</div><div class="value">Rp 239.750</div></div>
+  <div class="kpi"><div class="label">Berat sampah</div><div class="value">140,5 kg</div></div>
+</div>
+
+<h3>3.7 Konfigurasi Database di Neon</h3>
+<table>
+  <thead><tr><th style="width:28%">Item</th><th>Nilai</th></tr></thead>
+  <tbody>
+    <tr><td>Penyedia</td><td>Neon Serverless Postgres melalui Vercel Marketplace</td></tr>
+    <tr><td>Nama database</td><td><code>neondb</code>, pemilik <code>neondb_owner</code></td></tr>
+    <tr><td>Versi server</td><td>PostgreSQL 18.7 (aarch64, Linux)</td></tr>
+    <tr><td>Region</td><td><code>sin1</code> (Asia Pacific, Singapore)</td></tr>
+    <tr><td>Koneksi aplikasi</td><td><code>DATABASE_URL</code> &mdash; koneksi pooled untuk runtime Vercel</td></tr>
+    <tr><td>Koneksi administrasi</td><td><code>DATABASE_URL_UNPOOLED</code> &mdash; dipakai <code>db:init</code> untuk DDL</td></tr>
+    <tr><td>Objek database</td><td>7 tabel, 3 view, 1 fungsi trigger, 1 trigger, 3 indeks eksplisit</td></tr>
+  </tbody>
+</table>
+<div class="note"><b>Catatan keamanan.</b> Nilai connection string tidak ditulis pada laporan ini. Kredensial disimpan sebagai environment variable Vercel dan disalin ke <code>.env.local</code> hanya untuk keperluan pengembangan lokal.</div>
+
+<h3>3.8 Query Agregasi untuk Dashboard dan Laporan</h3>
+<p>Dashboard tidak mengambil seluruh baris lalu menghitung di JavaScript. Perhitungan dilakukan oleh PostgreSQL dalam satu permintaan, sehingga jumlah data yang dikirim ke aplikasi tetap kecil. Query berikut menghasilkan empat indikator utama yang tampil pada kartu dashboard.</p>
+<div class="code">SELECT
+  (SELECT COUNT(*)::int FROM nasabah)                                   AS total_nasabah,
+  (SELECT COALESCE(SUM(berat_kg), 0)::text FROM detail_setoran)         AS total_kg,
+  (SELECT COALESCE(SUM(berat_kg * harga_satuan), 0)::text
+     FROM detail_setoran)                                               AS total_nilai,
+  (SELECT COALESCE(SUM(saldo), 0)::text FROM v_saldo_nasabah)           AS total_saldo,
+  (SELECT COALESCE(SUM(jumlah), 0)::text FROM penarikan_saldo)          AS total_penarikan;</div>
+<p>Untuk laporan periodik, filter tanggal diterapkan pada header setoran sebelum rincian diagregasi. Pendekatan ini memanfaatkan indeks <code>idx_setoran_tgl</code> dan memastikan transaksi di luar periode tidak ikut terhitung.</p>
+<div class="code">SELECT k.nama_kategori,
+       COALESCE(SUM(d.berat_kg), 0)                  AS total_kg,
+       COALESCE(SUM(d.berat_kg * d.harga_satuan), 0) AS total_nilai
+FROM kategori_sampah k
+JOIN jenis_sampah j    ON j.id_kategori = k.id_kategori
+LEFT JOIN detail_setoran d ON d.id_jenis = j.id_jenis
+  AND d.id_setoran IN (
+      SELECT id_setoran FROM setoran
+      WHERE tgl_setoran BETWEEN $1 AND $2
+  )
+GROUP BY k.id_kategori, k.nama_kategori
+ORDER BY total_kg DESC;</div>
+
+<!-- ==================== 4 ==================== -->
+<h2>4. Implementasi Antarmuka &amp; Lima Fitur Utama</h2>
+
+<h3>4.1 Kerangka Antarmuka</h3>
+<p>Antarmuka memakai sidebar hijau tua yang konsisten pada seluruh halaman, area isi berwarna putih dengan latar hijau muda, dan kartu-kartu statistik. Warna hijau dipilih karena berkaitan dengan daur ulang, dengan aksen limau untuk menu aktif. Setiap halaman memiliki judul, penjelasan singkat, aksi utama, dan umpan balik setelah operasi berhasil atau gagal.</p>
+<p>Navigasi terdiri atas enam menu: Dashboard, Nasabah, Jenis Sampah, Setoran, Penarikan, dan Laporan. Identitas pengguna serta versi aplikasi ditampilkan di bagian bawah sidebar.</p>
+
+<div class="figure hero">
+  <img src="assets/01-dashboard.png" alt="Dashboard Bank Sampah Digital">
+  <div class="caption">Gambar 1. Dashboard menampilkan empat KPI, tren setoran enam bulan, komposisi kategori, setoran terbaru, dan nasabah teraktif.</div>
+</div>
+
+<h3>4.2 Fitur 1 &mdash; Dashboard dan Analitik Operasional</h3>
+<p>Dashboard adalah halaman pertama yang dilihat pengelola. Empat kartu utama menampilkan nasabah terdaftar, berat sampah terkumpul, nilai setoran, dan saldo tersimpan. Nilai tersebut dihitung langsung dari tabel dan view, sehingga selalu mengikuti transaksi terbaru. Grafik tren memakai agregasi enam bulan terakhir; komposisi kategori memakai <code>v_rekap_kategori</code>; daftar nasabah teraktif diurutkan berdasarkan total nilai setoran.</p>
+<p>Pada kondisi akhir, dashboard menampilkan <b>7 nasabah</b>, <b>140,5 kg</b> sampah, <b>Rp 389.750</b> nilai setoran, dan <b>Rp 239.750</b> saldo tersimpan. Tombol pintas di bagian bawah mengarahkan pengguna ke pencatatan setoran, penarikan saldo, dan laporan periodik.</p>
+
+<h3>4.3 Fitur 2 &mdash; Manajemen Nasabah</h3>
+<p>Halaman nasabah menggabungkan pencarian, daftar, form pendaftaran, dan ringkasan saldo. Pencarian memeriksa nama, nomor HP, dan alamat menggunakan <code>ILIKE</code>, sehingga petugas dapat menemukan nasabah tanpa menghafal ID. Setiap baris menampilkan jumlah setoran dan saldo terkini dari <code>v_saldo_nasabah</code>.</p>
+
+<div class="figure">
+  <img src="assets/02-nasabah-pencarian.png" alt="Pencarian nasabah Budi">
+  <div class="caption">Gambar 2. Pencarian kata kunci &ldquo;Budi&rdquo; menyaring daftar menjadi tepat satu nasabah, lengkap dengan saldo dan jumlah setoran.</div>
+</div>
+
+<p>Form pendaftaran memvalidasi nama minimal tiga karakter, nomor HP 10&ndash;15 digit, dan tanggal daftar. Nomor HP diperiksa unik di database. Setelah berhasil, pengguna diarahkan ke halaman detail nasabah yang menampilkan total setoran, total penarikan, saldo, serta riwayat gabungan setoran dan penarikan.</p>
+
+<table class="small">
+  <thead><tr><th style="width:16%">Field</th><th style="width:34%">Aturan validasi</th><th>Perilaku saat tidak valid</th></tr></thead>
+  <tbody>
+    <tr><td>Nama lengkap</td><td>Wajib, 3&ndash;100 karakter</td><td>Pesan kesalahan tampil; data tidak dikirim ke database.</td></tr>
+    <tr><td>Nomor HP</td><td>10&ndash;15 digit, unik antar-nasabah</td><td>Duplikat ditolak oleh <code>UNIQUE(no_hp)</code> dan diterjemahkan menjadi pesan ramah.</td></tr>
+    <tr><td>Tanggal daftar</td><td>Format <code>YYYY-MM-DD</code> yang valid</td><td>Form menolak tanggal kosong atau tidak valid.</td></tr>
+    <tr><td>Alamat</td><td>Opsional, maksimal 200 karakter</td><td>Input berlebih ditolak sebelum query dijalankan.</td></tr>
+  </tbody>
+</table>
+
+<div class="figure">
+  <img src="assets/03-nasabah-baru.png" alt="Detail nasabah baru Rina Wulandari">
+  <div class="caption">Gambar 3. Nasabah baru Rina Wulandari tersimpan dengan saldo awal Rp 0 dan riwayat transaksi kosong.</div>
+</div>
+
+<p>Validasi duplikasi tidak hanya mengandalkan pesan aplikasi. Constraint <code>UNIQUE(no_hp)</code> tetap menjadi pengaman terakhir. Ketika nomor HP yang sudah dipakai dicoba didaftarkan kembali, kode kesalahan PostgreSQL <code>23505</code> diterjemahkan menjadi pesan yang mudah dipahami pengguna.</p>
+
+<div class="figure">
+  <img src="assets/04-validasi-nasabah.png" alt="Validasi nomor HP ganda">
+  <div class="caption">Gambar 4. Nomor HP yang sudah terdaftar ditolak, form tetap terbuka, dan pesan kesalahan ditampilkan di atas field.</div>
+</div>
+
+<h3>4.4 Fitur 3 &mdash; Master Jenis Sampah dan Harga</h3>
+<p>Halaman jenis sampah mengelola dua tingkat data: kategori dan jenis. Setiap jenis menampilkan kategori, frekuensi pemakaian, total volume, dan harga per kilogram. Harga dapat diubah langsung pada kolom input lalu disimpan. Perubahan harga master tidak menyentuh <code>harga_satuan</code> pada detail transaksi lama.</p>
+
+<div class="figure tall">
+  <img src="assets/05-harga-master.png" alt="Master jenis sampah dan perubahan harga">
+  <div class="caption">Gambar 5. Harga Botol PET diubah menjadi Rp 3.750; pesan sukses menegaskan bahwa transaksi lama tetap memakai harga snapshot.</div>
+</div>
+
+<p>Pada pengujian, harga Botol PET diubah dari Rp 3.700 menjadi Rp 3.750. Setoran #001 yang dibuat sebelum perubahan tetap bernilai Rp 3.500 per kg. Sebaliknya, setoran #009 yang dibuat setelah perubahan memakai Rp 3.750. Ini membuktikan bahwa histori keuangan tidak berubah ketika master harga diperbarui.</p>
+
+<h3>4.5 Fitur 4 &mdash; Setoran Multi-Jenis</h3>
+<p>Form setoran memungkinkan satu transaksi berisi hingga 20 baris jenis sampah. Pengguna memilih nasabah, petugas, tanggal, dan catatan; setiap baris berisi jenis sampah dan berat. Subtotal dihitung otomatis di browser untuk kenyamanan, tetapi server menghitung ulang seluruh nilai sebelum menyimpan.</p>
+
+<div class="figure">
+  <img src="assets/06-form-setoran.png" alt="Form setoran multi-jenis">
+  <div class="caption">Gambar 6. Form setoran dengan dua baris: Kardus 3 kg dan Botol PET 2 kg; ringkasan menunjukkan total berat 5 kg dan total bayar Rp 13.500.</div>
+</div>
+
+<p>Server Action mengambil harga terbaru dari tabel <code>jenis_sampah</code>, membulatkan berat dua desimal, lalu menulis header dan detail dalam satu transaksi. Jika salah satu baris gagal, seluruh transaksi di-<i>rollback</i> sehingga tidak ada setoran setengah jadi. Setelah berhasil, halaman detail menampilkan bukti setoran yang dapat dicetak.</p>
+
+<div class="figure">
+  <img src="assets/07-detail-setoran.png" alt="Detail setoran nomor 009">
+  <div class="caption">Gambar 7. Setoran #009 tersimpan: Kardus 3 kg &times; Rp 2.000 = Rp 6.000 dan Botol PET 2 kg &times; Rp 3.750 = Rp 7.500, total Rp 13.500.</div>
+</div>
+
+<div class="code">// Harga tidak diambil dari input browser, tetapi dibaca ulang dari master.
+const master = await query(
+  `SELECT id_jenis, harga_per_kg::text FROM jenis_sampah
+   WHERE id_jenis = ANY($1::int[])`,
+  [ids],
+);
+
+// Header dan seluruh detail ditulis dalam satu transaksi.
+idSetoran = await withTransaction(async (client) =&gt; {
+  const header = await client.query(
+    `INSERT INTO setoran (id_nasabah, id_petugas, tgl_setoran, catatan)
+     VALUES ($1, $2, $3, $4) RETURNING id_setoran`,
+    [idNasabah, idPetugas, tanggal, catatan || null],
+  );
+  // ... INSERT detail_setoran untuk setiap baris ...
+  return header.rows[0].id_setoran;
+});</div>
+
+<h3>4.6 Fitur 5 &mdash; Penarikan Saldo dengan Validasi Dua Lapis</h3>
+<p>Penarikan saldo adalah transaksi paling sensitif karena mengurangi kewajiban bank sampah kepada nasabah. Implementasi memakai dua lapis pertahanan. <b>Lapis pertama</b> berada di Server Action: saldo dibaca dari <code>v_saldo_nasabah</code>, nominal dibandingkan, lalu baris nasabah dikunci dengan <code>SELECT ... FOR UPDATE</code> agar dua permintaan bersamaan tidak lolos bersama. <b>Lapis kedua</b> berada di database: trigger <code>trg_penarikan_cek_saldo</code> menghitung ulang saldo dan menolak nominal yang melebihi saldo.</p>
+
+<div class="figure">
+  <img src="assets/08-penarikan-ditolak.png" alt="Penarikan melebihi saldo ditolak">
+  <div class="caption">Gambar 8. Permintaan Rp 999.999 ditolak karena saldo Rina Wulandari hanya Rp 13.500; pesan menyebutkan saldo tersedia secara eksplisit.</div>
+</div>
+
+<p>Setelah penolakan, saldo tidak berubah dan tidak ada baris pada <code>penarikan_saldo</code>. Pengujian kemudian dilanjutkan dengan penarikan sah Rp 5.000. Saldo berubah dari Rp 13.500 menjadi Rp 8.500, daftar penarikan bertambah, dan total penarikan berubah dari Rp 145.000 menjadi Rp 150.000.</p>
+
+<div class="figure">
+  <img src="assets/09-penarikan-berhasil.png" alt="Penarikan saldo berhasil">
+  <div class="caption">Gambar 9. Penarikan Rp 5.000 berhasil; saldo nasabah menjadi Rp 8.500 dan transaksi tercatat pada riwayat.</div>
+</div>
+
+<h3>4.7 Perlindungan Riwayat dan Penghapusan Data</h3>
+<p>Nasabah yang sudah memiliki setoran atau penarikan tidak boleh dihapus. Foreign key <code>RESTRICT</code> menolak operasi tersebut; aplikasi menangkap kode <code>23503</code> (foreign key violation) dan <code>23001</code> (restrict violation) lalu menampilkan pesan yang menjelaskan alasannya. Dengan demikian, riwayat keuangan tidak dapat hilang karena penghapusan data master.</p>
+
+<div class="figure">
+  <img src="assets/10-hapus-ditolak.png" alt="Penghapusan nasabah ditolak">
+  <div class="caption">Gambar 10. Penghapusan Rina Wulandari ditolak karena masih memiliki riwayat setoran dan penarikan.</div>
+</div>
+
+<h3>4.8 Laporan Periodik dan Ekspor CSV</h3>
+<p>Halaman laporan merangkum data berdasarkan rentang tanggal. Pengguna dapat memilih tanggal awal dan akhir, lalu melihat jumlah transaksi, berat, nilai setoran, penarikan, rekap per kategori, nasabah teraktif, kinerja petugas, dan daftar transaksi. Tombol &ldquo;Unduh CSV&rdquo; menghasilkan berkas dengan pemisah titik koma dan BOM UTF-8 agar karakter Indonesia tampil benar di Excel.</p>
+
+<div class="figure report">
+  <img src="assets/11-laporan.png" alt="Laporan periodik Bank Sampah">
+  <div class="caption">Gambar 11. Laporan periode 1 Oktober&ndash;19 November 2026: 9 transaksi, 140,5 kg, Rp 389.750 setoran, dan Rp 150.000 penarikan.</div>
+</div>
+
+<p>Berkas CSV yang diunduh pada pengujian berukuran 1,4 KB dan memuat seluruh baris rincian, termasuk transaksi terbaru. Lima baris terakhir berkas tersebut adalah:</p>
+<div class="code">7;2026-10-15;Budi Santoso;Hendra Kusuma;Plastik;Botol PET;6,00;3500,00;21000,00
+8;2026-10-18;Agus Wijaya;Joko Susilo;Kaca;Botol kaca;10,00;500,00;5000,00
+8;2026-10-18;Agus Wijaya;Joko Susilo;Logam;Besi tua;25,00;4000,00;100000,00
+9;2026-11-19;Rina Wulandari;Hendra Kusuma;Kertas;Kardus;3,00;2000,00;6000,00
+9;2026-11-19;Rina Wulandari;Hendra Kusuma;Plastik;Botol PET;2,00;3750,00;7500,00</div>
+
+<h3>4.9 Detail Pengalaman Pengguna</h3>
+<ul>
+  <li><b>Umpan balik jelas.</b> Setiap operasi menghasilkan banner sukses atau galat, bukan halaman kosong atau pesan teknis database.</li>
+  <li><b>Format Indonesia.</b> Nilai uang ditampilkan dengan awalan &ldquo;Rp&rdquo; dan pemisah ribuan titik; tanggal memakai format <code>dd MMM yyyy</code> berbahasa Indonesia.</li>
+  <li><b>Pencegahan kesalahan.</b> Tombol simpan nonaktif saat proses berjalan; berat wajib lebih dari nol; nominal penarikan memiliki batas wajar.</li>
+  <li><b>Bukti transaksi.</b> Halaman detail setoran dapat dicetak melalui tombol &ldquo;Cetak bukti&rdquo; untuk diberikan kepada nasabah.</li>
+  <li><b>Kondisi kosong.</b> Tabel tanpa data menampilkan penjelasan, bukan area kosong tanpa konteks.</li>
+</ul>
+
+<!-- ==================== 5 ==================== -->
+<h2>5. Pengujian Sistem (Black-Box End-to-End)</h2>
+
+<h3>5.1 Metode dan Lingkungan Pengujian</h3>
+<p>Pengujian dilakukan dengan pendekatan <i>black-box end-to-end</i> menggunakan Playwright dan browser Chromium. Penguji hanya berinteraksi melalui antarmuka, tanpa memanggil fungsi internal. Seluruh skenario dijalankan terhadap aplikasi produksi, bukan server lokal, sehingga sekaligus memverifikasi koneksi database, environment variable, dan hasil deployment.</p>
+<table>
+  <thead><tr><th style="width:26%">Item</th><th>Keterangan</th></tr></thead>
+  <tbody>
+    <tr><td>Target pengujian</td><td><code>https://bank-sampah-digital-rust.vercel.app</code></td></tr>
+    <tr><td>Waktu eksekusi</td><td>19 November 2026, 14.16 WIB (<code>2026-11-19T07:16:53Z</code>)</td></tr>
+    <tr><td>Browser</td><td>Chromium melalui Playwright 1.65.1, viewport 1440 &times; 960, skala perangkat 1,5</td></tr>
+    <tr><td>Lokalisasi</td><td><code>id-ID</code>, zona waktu <code>Asia/Jakarta</code></td></tr>
+    <tr><td>Jumlah skenario</td><td>11 skenario (T01&ndash;T11)</td></tr>
+    <tr><td>Data uji</td><td>Data Tugas 1 ditambah Rina Wulandari, setoran multi-jenis, dan penarikan sah/tidak sah</td></tr>
+    <tr><td>Berkas hasil</td><td><code>tests/e2e.mjs</code> dan <code>tests/results.json</code></td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 Skenario dan Hasil</h3>
+<table class="small">
+  <thead>
+    <tr>
+      <th style="width:6%">ID</th>
+      <th style="width:19%">Skenario</th>
+      <th style="width:22%">Input / langkah</th>
+      <th style="width:22%">Hasil yang diharapkan</th>
+      <th style="width:25%">Hasil aktual</th>
+      <th style="width:6%">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>T01</td><td>Dashboard menampilkan ringkasan operasional</td><td>Buka halaman utama aplikasi</td><td>Empat kartu KPI tampil dan tidak ada pesan error</td><td>Dashboard tampil dengan 4 KPI, grafik tren, dan komposisi kategori</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T02</td><td>Pencarian nasabah</td><td>Kata kunci &ldquo;Budi&rdquo;</td><td>Daftar hanya menampilkan nasabah yang cocok</td><td>Pencarian &ldquo;Budi&rdquo; menampilkan tepat 1 baris (Budi Santoso)</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T03</td><td>Menambah nasabah baru</td><td>Nama Rina Wulandari, HP 081272551777, alamat Semarang</td><td>Nasabah tersimpan, halaman detail terbuka, saldo awal Rp 0</td><td>Nasabah #7 tersimpan dan halaman detail menampilkan saldo Rp 0</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T04</td><td>Validasi nomor HP ganda</td><td>Tambah nasabah dengan HP 081299990002 (milik Budi)</td><td>Sistem menolak dan menampilkan pesan nomor HP sudah terdaftar</td><td>Pesan &ldquo;Nomor HP sudah terdaftar pada nasabah lain&rdquo; ditampilkan</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T05</td><td>Ubah harga master &amp; snapshot harga lama</td><td>Harga Botol PET diubah dari Rp 3.700 menjadi Rp 3.750</td><td>Harga master berubah, tetapi detail setoran lama tetap Rp 3.500</td><td>Master menjadi Rp 3.750; snapshot setoran #001 tetap Rp 3.500</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T06</td><td>Mencatat setoran multi-jenis</td><td>Kardus 3 kg + Botol PET 2 kg untuk Rina Wulandari</td><td>Total otomatis Rp 13.500 dan transaksi tersimpan</td><td>Setoran #9 tersimpan dengan total Rp 13.500</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T07</td><td>Penarikan melebihi saldo ditolak</td><td>Tarik Rp 999.999 dari saldo Rp 13.500</td><td>Transaksi ditolak dengan pesan saldo tidak mencukupi</td><td>Penarikan ditolak, pesan menyebutkan saldo tersedia Rp 13.500</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T08</td><td>Penarikan saldo valid</td><td>Tarik Rp 5.000 dari saldo Rp 13.500</td><td>Transaksi berhasil dan saldo tersisa Rp 8.500</td><td>Penarikan Rp 5.000 berhasil; saldo nasabah menjadi Rp 8.500</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T09</td><td>Hapus nasabah dengan riwayat transaksi</td><td>Klik Hapus pada nasabah Rina Wulandari</td><td>Penghapusan ditolak karena melanggar foreign key</td><td>Penghapusan ditolak oleh integritas referensial (FK RESTRICT)</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T10</td><td>Laporan periodik &amp; ekspor CSV</td><td>Buka laporan periode seluruh data</td><td>Rekap kategori, nasabah teraktif, kinerja petugas tampil; CSV berisi data</td><td>Laporan tampil lengkap; CSV 1,4 KB berhasil diunduh</td><td class="center"><b>Lulus</b></td></tr>
+    <tr><td>T11</td><td>Health check koneksi database</td><td><code>GET /api/health</code></td><td>Status ok dan database connected</td><td>Database terhubung; 7 nasabah, 9 setoran</td><td class="center"><b>Lulus</b></td></tr>
+  </tbody>
+</table>
+
+<h3>5.3 Rekapitulasi Hasil</h3>
+<div class="kpi-grid">
+  <div class="kpi"><div class="label">Skenario</div><div class="value">11</div></div>
+  <div class="kpi"><div class="label">Lulus</div><div class="value">11</div></div>
+  <div class="kpi"><div class="label">Gagal</div><div class="value">0</div></div>
+  <div class="kpi"><div class="label">Total durasi</div><div class="value">61,7 s</div></div>
+</div>
+<p>Seluruh skenario berstatus <b>LULUS</b>. Total durasi eksekusi sekitar 61,7 detik dengan rata-rata 5,6 detik per skenario, termasuk waktu tunggu jaringan dan <i>cold start</i> koneksi database. Berkas hasil lengkap tersimpan pada <code>tests/results.json</code> dan menjadi dasar tabel di atas.</p>
+
+<h3>5.4 Pemetaan Bukti Tangkapan Layar</h3>
+<table>
+  <thead><tr><th style="width:12%">Skenario</th><th style="width:48%">Bukti</th><th>Gambar</th></tr></thead>
+  <tbody>
+    <tr><td>T01</td><td>Dashboard dengan KPI dan grafik</td><td>Gambar 1</td></tr>
+    <tr><td>T02</td><td>Pencarian &ldquo;Budi&rdquo; menghasilkan satu baris</td><td>Gambar 2</td></tr>
+    <tr><td>T03</td><td>Halaman detail nasabah baru dan saldo Rp 0</td><td>Gambar 3</td></tr>
+    <tr><td>T04</td><td>Pesan validasi nomor HP ganda</td><td>Gambar 4</td></tr>
+    <tr><td>T05</td><td>Harga master berubah dan pesan snapshot</td><td>Gambar 5</td></tr>
+    <tr><td>T06</td><td>Form setoran dan detail setoran #009</td><td>Gambar 6&ndash;7</td></tr>
+    <tr><td>T07</td><td>Penarikan Rp 999.999 ditolak</td><td>Gambar 8</td></tr>
+    <tr><td>T08</td><td>Penarikan Rp 5.000 berhasil, saldo Rp 8.500</td><td>Gambar 9</td></tr>
+    <tr><td>T09</td><td>Penghapusan nasabah ditolak</td><td>Gambar 10</td></tr>
+    <tr><td>T10</td><td>Laporan periodik dan CSV</td><td>Gambar 11</td></tr>
+    <tr><td>T11</td><td>Respons endpoint health</td><td>Gambar 12</td></tr>
+  </tbody>
+</table>
+
+<h3>5.5 Bukti Health Check Produksi</h3>
+<p>Endpoint <code>/api/health</code> menjalankan empat query hitung ke database. Respons berikut diambil langsung dari server produksi pada 20 November 2026 pukul 17.22 WIB.</p>
+<div class="termbar">GET https://bank-sampah-digital-rust.vercel.app/api/health &mdash; 200 OK</div>
+<div class="term">{"status":"ok","database":"connected","timestamp":"2026-11-20T10:22:08.214Z",
+ "tabel":{"nasabah":7,"setoran":9,"detail":17,"penarikan":6}}</div>
+
+<div class="figure">
+  <img src="assets/12-health-check.png" alt="Respons endpoint health" style="max-height:66mm;border:1px solid #cfd8d3">
+  <div class="caption">Gambar 12. Respons endpoint <code>/api/health</code> dari server produksi, ditampilkan dalam format yang mudah dibaca.</div>
+</div>
+
+<h3>5.6 Catatan Perbaikan Selama Pengujian</h3>
+<table>
+  <thead><tr><th style="width:6%">No</th><th style="width:33%">Masalah yang ditemukan</th><th style="width:30%">Penyebab</th><th>Perbaikan</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Build gagal karena kelas <code>.btn</code> tidak dikenali</td><td>Tailwind CSS 4 tidak mengizinkan <code>@apply</code> pada kelas biasa di luar layer utilitas</td><td>Kelas kustom dideklarasikan dengan <code>@utility btn</code></td></tr>
+    <tr><td>2</td><td>Harga Rp 3.750 dan nominal Rp 999.999 tidak dapat dikirim</td><td>Atribut <code>step</code> pada input terlalu besar sehingga validasi HTML5 menolak nilai</td><td><code>step</code> harga diubah menjadi 50 dan nominal penarikan menjadi 1</td></tr>
+    <tr><td>3</td><td>Penghapusan nasabah beriwayat menghasilkan galat mentah</td><td>PostgreSQL mengembalikan kode <code>23001</code> (restrict violation), bukan hanya <code>23503</code></td><td>Kedua kode ditangani dan diterjemahkan menjadi pesan yang ramah</td></tr>
+    <tr><td>4</td><td>Tanggal dapat bergeser satu hari</td><td>Kolom <code>DATE</code> dibaca sebagai objek waktu lalu dikonversi antar zona waktu</td><td>Parser tipe 1082 mengembalikan string <code>YYYY-MM-DD</code> apa adanya</td></tr>
+  </tbody>
+</table>
+
+<h3>5.7 Validitas Data Uji</h3>
+<p>Pengujian dijalankan setelah basis data dibangun ulang dari <code>schema.sql</code> dan <code>seed.sql</code>, sehingga hasil tidak dipengaruhi sisa data percobaan sebelumnya. Data uji sengaja dibiarkan pada basis data produksi agar angka pada laporan, tangkapan layar, CSV, dan endpoint health konsisten. Dengan demikian, pembaca dapat mencocokkan setiap angka pada dokumen ini dengan data yang benar-benar tersimpan.</p>
+
+<!-- ==================== 6 ==================== -->
+<h2>6. Deployment &amp; Akses Publik</h2>
+
+<h3>6.1 Alamat Aplikasi</h3>
+<div class="okbox">
+  <b>URL publik:</b> <code>https://bank-sampah-digital-rust.vercel.app</code><br>
+  Aplikasi dapat dibuka langsung tanpa login. Halaman utama merespons <b>HTTP 200</b> dan endpoint health melaporkan database terhubung.
+</div>
+
+<table>
+  <thead><tr><th style="width:28%">Item</th><th>Keterangan</th></tr></thead>
+  <tbody>
+    <tr><td>Platform hosting</td><td>Vercel, lingkungan Production</td></tr>
+    <tr><td>Nama proyek</td><td><code>bank-sampah-digital</code> (akun <code>zianmustofaa-5934</code>)</td></tr>
+    <tr><td>Framework</td><td>Next.js 16.4.6, Node.js 26.x</td></tr>
+    <tr><td>Domain produksi</td><td><code>bank-sampah-digital-rust.vercel.app</code></td></tr>
+    <tr><td>Deployment ID</td><td><code>dpl_FTNEriK3BZsVC2LECLiTqkjnkHVp</code></td></tr>
+    <tr><td>Waktu deploy</td><td>19 November 2026, 14.14 WIB</td></tr>
+    <tr><td>Durasi build</td><td>30 detik (mesin 2 vCPU, 8 GB RAM)</td></tr>
+    <tr><td>Status</td><td>Ready / Production</td></tr>
+    <tr><td>Proteksi akses</td><td>Vercel Authentication dinonaktifkan agar URL dapat diakses publik</td></tr>
+  </tbody>
+</table>
+
+<h3>6.2 Environment Variable</h3>
+<table>
+  <thead><tr><th style="width:34%">Nama</th><th style="width:18%">Lingkungan</th><th>Fungsi</th></tr></thead>
+  <tbody>
+    <tr><td><code>DATABASE_URL</code></td><td>Production, Preview, Development</td><td>Connection string pooled yang dipakai aplikasi saat melayani permintaan.</td></tr>
+    <tr><td><code>DATABASE_URL_UNPOOLED</code></td><td>Development / operasional</td><td>Koneksi langsung untuk menjalankan DDL dan seed melalui <code>npm run db:init</code>.</td></tr>
+  </tbody>
+</table>
+<p>Kedua nilai berasal dari integrasi Neon melalui Vercel Marketplace. Nilai aktual tidak dimuat dalam laporan. Untuk pengembangan lokal, nilai disalin dengan <code>vercel env pull .env.local</code>.</p>
+
+<h3>6.3 Langkah Deployment</h3>
+<ol>
+  <li>Membuat proyek Next.js dan menyalin skema Tugas 1 ke <code>db/schema.sql</code> serta data ke <code>db/seed.sql</code>.</li>
+  <li>Menambahkan integrasi Neon melalui Vercel Marketplace sehingga database dan environment variable terbentuk otomatis.</li>
+  <li>Menjalankan <code>npm run db:init</code> untuk membuat tujuh tabel, tiga view, trigger, dan 52 baris data awal.</li>
+  <li>Menjalankan <code>npm run build</code> secara lokal untuk memastikan tidak ada kesalahan TypeScript atau Tailwind.</li>
+  <li>Mendeploy dengan Vercel CLI ke lingkungan production.</li>
+  <li>Menonaktifkan Vercel Authentication agar halaman dapat diakses publik.</li>
+  <li>Memverifikasi <code>/api/health</code>, menjalankan 11 skenario Playwright terhadap URL produksi, dan menyimpan hasilnya.</li>
+  <li>Mengambil tangkapan layar dari aplikasi produksi dan menyusun laporan ini.</li>
+</ol>
+
+<h3>6.4 Bukti Deployment dari CLI</h3>
+<div class="termbar">PowerShell &mdash; D:\ApsMobile_projek\Bangksampah\bank-sampah-web</div>
+<div class="term">$ npx vercel ls
+&gt; Deployments for zianmustofaa-5934s-projects/bank-sampah-digital
+
+  Age   Project                                          Status   Environment   Duration
+  6m    bank-sampah-digital-qjf7jxloj-...vercel.app      Ready    Production    30s
+
+$ npx vercel inspect https://bank-sampah-digital-qjf7jxloj-...vercel.app
+  id            dpl_FTNEriK3BZsVC2LECLiTqkjnkHVp
+  name          bank-sampah-digital
+  target        production
+  status        Ready
+  created       Thu Nov 19 2026 14:14:18 GMT+0700
+  build         30s
+  aliases       https://bank-sampah-digital-rust.vercel.app</div>
+
+<h3>6.5 Verifikasi Akses Publik</h3>
+<div class="termbar">PowerShell &mdash; verifikasi respons HTTP</div>
+<div class="term">$ (Invoke-WebRequest https://bank-sampah-digital-rust.vercel.app -UseBasicParsing).StatusCode
+200
+
+$ Invoke-RestMethod https://bank-sampah-digital-rust.vercel.app/api/health
+status    : ok
+database  : connected
+timestamp : 2026-11-20T10:22:08.214Z
+tabel     : @{nasabah=7; setoran=9; detail=17; penarikan=6}</div>
+<p>Respons <b>200</b> tanpa header <code>WWW-Authenticate</code> menunjukkan halaman dapat dibuka tanpa autentikasi. Halaman yang sama juga diuji melalui browser Playwright pada seluruh skenario, sehingga bukan hanya endpoint health yang dapat diakses.</p>
+
+<h3>6.6 Catatan Operasional</h3>
+<ul>
+  <li><b>Cold start.</b> Neon dapat menunda koneksi pertama setelah tidak ada aktivitas. Connection pool dan <code>attachDatabasePool</code> membantu menutup koneksi dengan rapi saat instance Vercel di-suspend.</li>
+  <li><b>Data produksi.</b> Data uji tidak dihapus agar bukti pada laporan tetap dapat diverifikasi. Untuk penggunaan nyata, data uji harus dibersihkan dan diganti data warga.</li>
+  <li><b>Tanpa autentikasi.</b> Siapa pun yang mengetahui URL dapat mengubah data. Sebelum dipakai organisasi nyata, autentikasi dan otorisasi wajib ditambahkan.</li>
+  <li><b>Backup.</b> Paket gratis Neon menyediakan riwayat pemulihan terbatas; backup terjadwal dan uji restore perlu direncanakan untuk operasional jangka panjang.</li>
+</ul>
+
+<!-- ==================== 7 ==================== -->
+<h2>7. Kesimpulan &amp; Saran</h2>
+
+<h3>7.1 Kesimpulan</h3>
+<ol>
+  <li><b>Rancangan basis data berhasil diimplementasikan.</b> Tujuh tabel, tiga view, dan satu trigger dari Tugas 1 berjalan pada PostgreSQL 18.7 di Neon, lengkap dengan primary key, foreign key, constraint, dan indeks.</li>
+  <li><b>Aplikasi web telah mencakup proses bisnis inti.</b> Dashboard, manajemen nasabah, master harga, setoran multi-jenis, penarikan saldo, laporan periodik, dan ekspor CSV dapat digunakan melalui antarmuka yang konsisten.</li>
+  <li><b>Integritas data dijaga berlapis.</b> Validasi server, transaksi database, penguncian baris, foreign key, dan trigger saldo bekerja bersama. Uji penarikan Rp 999.999 ditolak, sedangkan penarikan Rp 5.000 berhasil dan mengubah saldo secara tepat.</li>
+  <li><b>Keputusan snapshot harga terbukti.</b> Perubahan harga Botol PET menjadi Rp 3.750 tidak mengubah nilai setoran lama yang tersimpan pada Rp 3.500.</li>
+  <li><b>Sistem telah diuji dan dipublikasikan.</b> Sebelas skenario end-to-end lulus tanpa kegagalan pada URL publik, dan endpoint health memastikan koneksi database produksi aktif.</li>
+</ol>
+
+<h3>7.2 Saran Pengembangan</h3>
+<ul>
+  <li><b>Autentikasi dan peran.</b> Tambahkan login serta pembatasan hak akses untuk admin, kasir, dan petugas penimbang. Ini merupakan prioritas sebelum aplikasi dipakai dengan data nyata.</li>
+  <li><b>Jejak audit.</b> Catat siapa mengubah harga, menghapus data, atau melakukan koreksi, beserta waktu dan nilai sebelum perubahan.</li>
+  <li><b>Backup dan pemulihan.</b> Terapkan backup terjadwal, uji restore, serta kebijakan retensi data transaksi.</li>
+  <li><b>Peningkatan laporan.</b> Tambahkan ekspor PDF, grafik per petugas, filter per kategori, dan laporan bulanan otomatis.</li>
+  <li><b>Pengalaman mobile.</b> Karena petugas sering bekerja di lapangan, aplikasi dapat dikembangkan menjadi PWA atau aplikasi mobile dengan pemindai barcode dan mode offline terbatas.</li>
+  <li><b>Validasi bisnis tambahan.</b> Tambahkan batas penarikan harian, persetujuan untuk nominal besar, dan notifikasi ke nasabah.</li>
+</ul>
+
+<h3>7.3 Penutup</h3>
+<p>Implementasi Tugas 3 menunjukkan bahwa rancangan basis data tidak berhenti sebagai diagram dan skrip SQL. Dengan menghubungkan tujuh tabel ke antarmuka web, menerapkan aturan integritas pada lapisan aplikasi dan database, menguji alur nyata, serta mempublikasikan aplikasi, sistem Bank Sampah Digital dapat digunakan untuk mencatat setoran, menghitung saldo, melayani penarikan, dan menghasilkan laporan secara konsisten. Hasil ini menjadi dasar yang kuat untuk pengembangan lanjutan menuju sistem operasional yang aman dan siap dipakai banyak pengguna.</p>
+
+<!-- ==================== LAMPIRAN ==================== -->
+<h2>Lampiran A. Cara Menjalankan Aplikasi</h2>
+
+<h3>A.1 Prasyarat</h3>
+<ul>
+  <li>Node.js 20 atau lebih baru dan npm.</li>
+  <li>Akun Vercel yang terhubung ke proyek dan database Neon.</li>
+  <li>Vercel CLI untuk menarik environment variable dan melakukan deployment.</li>
+</ul>
+
+<h3>A.2 Perintah Lokal</h3>
+<div class="termbar">PowerShell &mdash; menjalankan aplikasi di komputer lokal</div>
+<div class="term">cd bank-sampah-web
+npm install
+npx vercel env pull .env.local      # mengambil DATABASE_URL dari Vercel
+npm run db:init                     # membuat ulang 7 tabel + 52 baris data
+npm run dev                         # http://localhost:3000
+
+# pengujian end-to-end terhadap aplikasi lokal
+$env:BASE_URL="http://localhost:3000"
+npm run test:e2e
+
+# pengujian terhadap produksi
+$env:BASE_URL="https://bank-sampah-digital-rust.vercel.app"
+npm run test:e2e</div>
+
+<div class="note"><b>Peringatan.</b> <code>npm run db:init</code> menghapus lalu membuat ulang seluruh tabel. Jangan jalankan perintah ini pada database yang sudah berisi data nyata tanpa backup.</div>
+
+<h3>A.3 Perintah Deployment</h3>
+<div class="termbar">PowerShell &mdash; deploy ke produksi</div>
+<div class="term">npx vercel build --prod
+npx vercel deploy --prebuilt --prod
+npx vercel ls
+npx vercel inspect https://bank-sampah-digital-rust.vercel.app</div>
+
+<h2>Lampiran B. Inventaris Berkas Penting</h2>
+<table>
+  <thead><tr><th style="width:38%">Berkas</th><th>Fungsi</th></tr></thead>
+  <tbody>
+    <tr><td><code>db/schema.sql</code></td><td>DDL tujuh tabel, tiga view, trigger perlindungan saldo, dan indeks.</td></tr>
+    <tr><td><code>db/seed.sql</code></td><td>52 baris data awal yang identik dengan hasil Tugas 1.</td></tr>
+    <tr><td><code>scripts/db-init.mjs</code></td><td>Menjalankan schema dan seed, lalu menampilkan jumlah baris tiap tabel.</td></tr>
+    <tr><td><code>src/lib/db.ts</code></td><td>Connection pool, query parameterized, dan helper transaksi.</td></tr>
+    <tr><td><code>src/lib/queries.ts</code></td><td>Seluruh query baca untuk dashboard, master, transaksi, dan laporan.</td></tr>
+    <tr><td><code>src/app/setoran/actions.ts</code></td><td>Validasi dan penyimpanan setoran multi-jenis dalam satu transaksi.</td></tr>
+    <tr><td><code>src/app/penarikan/actions.ts</code></td><td>Validasi saldo, penguncian baris, dan penyimpanan penarikan.</td></tr>
+    <tr><td><code>src/app/nasabah/actions.ts</code></td><td>CRUD nasabah, penanganan nomor HP ganda, dan perlindungan penghapusan.</td></tr>
+    <tr><td><code>src/app/api/health/route.ts</code></td><td>Health check koneksi dan jumlah baris tabel.</td></tr>
+    <tr><td><code>src/app/api/laporan/csv/route.ts</code></td><td>Ekspor rincian setoran ke CSV.</td></tr>
+    <tr><td><code>tests/e2e.mjs</code></td><td>Sebelas skenario Playwright dan pengambilan tangkapan layar.</td></tr>
+    <tr><td><code>tests/results.json</code></td><td>Hasil pengujian produksi: 11 lulus, 0 gagal, 61,7 detik.</td></tr>
+    <tr><td><code>laporan-tugas3/assets/</code></td><td>Dua belas tangkapan layar yang dipakai pada laporan ini.</td></tr>
+    <tr><td><code>laporan-tugas3/export-laporan.csv</code></td><td>Berkas CSV hasil unduhan dari aplikasi produksi.</td></tr>
+  </tbody>
+</table>
+
+<h3>B.1 Ringkasan Angka Kunci</h3>
+<table>
+  <thead><tr><th style="width:55%">Indikator</th><th>Nilai</th></tr></thead>
+  <tbody>
+    <tr><td>Jumlah tabel / view / trigger</td><td>7 / 3 / 1</td></tr>
+    <tr><td>Data awal / data akhir</td><td>52 baris / 57 baris</td></tr>
+    <tr><td>Nasabah / setoran / penarikan</td><td>7 / 9 / 6</td></tr>
+    <tr><td>Total berat sampah</td><td>140,5 kg</td></tr>
+    <tr><td>Total nilai setoran</td><td>Rp 389.750</td></tr>
+    <tr><td>Total penarikan</td><td>Rp 150.000</td></tr>
+    <tr><td>Saldo tersimpan</td><td>Rp 239.750</td></tr>
+    <tr><td>Skenario pengujian</td><td>11 lulus, 0 gagal</td></tr>
+    <tr><td>Durasi pengujian</td><td>61,7 detik</td></tr>
+    <tr><td>Durasi build produksi</td><td>30 detik</td></tr>
+    <tr><td>URL publik</td><td><code>https://bank-sampah-digital-rust.vercel.app</code></td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top:22pt;text-align:center;color:#5b6560;font-size:9pt">
+  &mdash; Akhir Laporan Tugas 3 &mdash;<br>
+  Zian Mustofa &middot; TIF 3A &middot; 25080960002 &middot; Tahun Akademik 2026/2027
+</p>
+
+</body>
+</html>

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Laporan Tugas Database - Bank Sampah Digital - Zian Mustofa</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11.5pt; color: #1f2328; line-height: 1.5; margin: 0; }
+  h1 { font-size: 16pt; margin: 18pt 0 8pt 0; }
+  h2 { font-size: 14pt; color: #1a4d7c; border-bottom: 2.5px solid #1a4d7c; padding-bottom: 3pt; margin-top: 22pt; }
+  h3 { font-size: 12pt; color: #1a4d7c; margin: 14pt 0 6pt 0; }
+  p, li { text-align: justify; }
+  ul, ol { margin: 4pt 0 8pt 18pt; padding: 0; }
+  table { border-collapse: collapse; margin: 8pt 0 12pt 0; width: 100%; }
+  th, td { border: 1px solid #8a8f98; padding: 4px 8px; font-size: 10pt; text-align: left; vertical-align: top; }
+  th { background: #e8f0fb; }
+  .code { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 10px 12px;
+          font-family: Consolas, "Courier New", monospace; font-size: 9pt; line-height: 1.35;
+          white-space: pre; overflow: hidden; margin: 8pt 0; }
+  .term { background: #14161a; color: #d6dadd; border-radius: 6px; border: 1px solid #3a3f44;
+          padding: 10px 12px; font-family: Consolas, "Courier New", monospace; font-size: 8pt;
+          line-height: 1.32; white-space: pre; overflow: hidden; margin: 8pt 0; }
+  .termbar { background: #23262b; color: #9aa4ad; font-family: Consolas, monospace; font-size: 8.5pt;
+             padding: 5px 12px; border-radius: 6px 6px 0 0; border: 1px solid #3a3f44; border-bottom: none;
+             margin: 8pt 0 0 0; }
+  .termwrap { margin: 0 0 12pt 0; }
+  .termwrap .term { border-radius: 0 0 6px 6px; margin: 0; }
+  .note { background: #fff8d6; border-left: 4px solid #c99500; padding: 7px 12px; font-size: 10pt; margin: 10pt 0; }
+  .pb { break-before: page; }
+  .caption { font-size: 9.5pt; color: #555; text-align: center; font-style: italic; margin: 4pt 0 10pt 0; }
+  .cover { text-align: center; margin-top: 90pt; }
+  .cover h1 { font-size: 20pt; margin: 0 0 6pt 0; }
+  .cover .sub { font-size: 14pt; color: #333; margin-bottom: 40pt; }
+  .cover .ident { font-size: 12.5pt; line-height: 1.9; }
+  .bullet { margin: 4pt 0 4pt 18pt; text-align: justify; }
+  svg .ent rect { fill: #ffffff; stroke: #24568c; stroke-width: 1.5; }
+  svg .ent .head { fill: #24568c; }
+  svg .ent text { font-family: 'Segoe UI', Arial, sans-serif; }
+  svg .rel { stroke: #555; stroke-width: 1.3; fill: none; }
+  svg .rlabel { font-size: 12px; fill: #444; font-family: 'Segoe UI', Arial, sans-serif; }
+  svg .card { font-size: 12px; fill: #b00; font-weight: bold; font-family: 'Segoe UI', Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ============ SAMPUL ============ -->
+<div class="cover">
+  <h1>LAPORAN TUGAS DATABASE</h1>
+  <div class="sub">Sistem Informasi Bank Sampah Digital</div>
+  <div class="ident">
+    Disusun oleh:<br>
+    <b>Nama&nbsp;&nbsp;: Zian Mustofa</b><br>
+    <b>Kelas&nbsp;&nbsp;&nbsp;: TIF 3A</b><br>
+    <b>NIM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 25080960002</b><br><br>
+    DBMS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: MySQL (MariaDB 10.11 — XAMPP, port 3306)<br>
+    Tools&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: PowerDesigner (CDM &amp; PDM), MySQL Client CLI<br>
+    Tahun Akademik: 2026/2027
+  </div>
+</div>
+
+<!-- ============ BAGIAN 1 ============ -->
+<h2 class="pb">1. Analisis Sistem Informasi</h2>
+
+<h3>1.1 Latar Belakang</h3>
+<p>Bank sampah adalah tempat warga menyetorkan sampah daur ulang (plastik, kertas, logam, kaca, elektronik)
+dan menukarnya dengan saldo uang. Sistem pencatatan manual di buku yang dilakukan petugas bank sampah
+sering menimbulkan permasalahan: salah hitung nilai setoran, saldo nasabah sulit dilacak, rekap bulanan
+memakan waktu, serta harga jenis sampah yang berubah menyebabkan riwayat transaksi lama tidak konsisten.
+Sistem informasi <i>Bank Sampah Digital</i> dibangun berbasis database terpusat dengan DBMS MySQL agar
+data nasabah, petugas, harga, setoran, dan penarikan saldo terekam secara rapi, konsisten, dan mudah
+direkap.</p>
+
+<h3>1.2 Tujuan</h3>
+<ol class="bullet">
+  <li>Mencatat data master: nasabah, petugas, kategori sampah, dan jenis sampah beserta harga per kilogram.</li>
+  <li>Mencatat setiap transaksi setoran sampah (siapa nasabahnya, kapan, petugas pencatat, jenis apa saja, berapa kg).</li>
+  <li>Mencatat setiap transaksi penarikan saldo nasabah.</li>
+  <li>Menghasilkan rekapitulasi: saldo tiap nasabah, total berat per kategori, nasabah teraktif, dan kinerja petugas.</li>
+</ol>
+
+<h3>1.3 Kebutuhan Data</h3>
+<table>
+  <tr><th>Kebutuhan</th><th>Data yang dikelola</th></tr>
+  <tr><td>Data master</td><td>nasabah, petugas, kategori sampah, jenis sampah + harga/kg</td></tr>
+  <tr><td>Transaksi setor</td><td>tanggal, nasabah, petugas, daftar jenis sampah, berat, harga saat setor</td></tr>
+  <tr><td>Transaksi tarik</td><td>tanggal, nasabah, petugas, jumlah penarikan</td></tr>
+  <tr><td>Laporan</td><td>saldo nasabah, berat per kategori, top nasabah, transaksi per petugas</td></tr>
+</table>
+
+<h3>1.4 Keputusan Desain</h3>
+<ul class="bullet">
+  <li><b>Harga snapshot.</b> <code>harga_satuan</code> disimpan di tabel <code>detail_setoran</code> (bukan hanya memakai
+  kolom <code>harga_per_kg</code> di <code>jenis_sampah</code>) agar nilai setoran lama tetap benar walaupun harga
+  jenis sampah berubah dari waktu ke waktu.</li>
+  <li><b>Saldo dihitung, tidak disimpan.</b> Saldo nasabah tidak dibuat kolom tersendiri; saldo dihitung dari
+  total setoran dikurangi total penarikan sehingga tidak terjadi data ganda (redundansi) dan selalu konsisten.</li>
+</ul>
+
+<h3>1.5 Spesifikasi Database</h3>
+<table>
+  <tr><th>Aspek</th><th>Keterangan</th></tr>
+  <tr><td>Jumlah tabel</td><td>7 tabel (melebihi syarat minimal 5 tabel berelasi)</td></tr>
+  <tr><td>Relasi</td><td>7 relasi one-to-many melalui foreign key</td></tr>
+  <tr><td>Volume data simulasi</td><td>5–15 baris per tabel (memenuhi syarat minimal 5 data per tabel):
+      kategori_sampah (5), jenis_sampah (8), nasabah (6), petugas (5), setoran (8), detail_setoran (15), penarikan_saldo (5)</td></tr>
+</table>
+
+<!-- ============ BAGIAN 2 ============ -->
+<h2 class="pb">2. Perancangan ERD</h2>
+
+<h3>2.1 Identifikasi Entitas dan Atribut</h3>
+<table>
+  <tr><th>Entitas</th><th>Primary Key</th><th>Foreign Key</th><th>Atribut</th></tr>
+  <tr><td>kategori_sampah</td><td>id_kategori</td><td>—</td><td>nama_kategori, deskripsi</td></tr>
+  <tr><td>jenis_sampah</td><td>id_jenis</td><td>id_kategori</td><td>nama_jenis, harga_per_kg</td></tr>
+  <tr><td>nasabah</td><td>id_nasabah</td><td>—</td><td>nama, alamat, no_hp, tgl_daftar</td></tr>
+  <tr><td>petugas</td><td>id_petugas</td><td>—</td><td>nama_petugas, jabatan, no_hp</td></tr>
+  <tr><td>setoran</td><td>id_setoran</td><td>id_nasabah, id_petugas</td><td>tgl_setoran, catatan</td></tr>
+  <tr><td>detail_setoran</td><td>id_detail</td><td>id_setoran, id_jenis</td><td>berat_kg, harga_satuan</td></tr>
+  <tr><td>penarikan_saldo</td><td>id_penarikan</td><td>id_nasabah, id_petugas</td><td>tgl_penarikan, jumlah</td></tr>
+</table>
+
+<h3>2.2 Diagram ERD</h3>
+<svg width="100%" viewBox="0 0 1140 670" xmlns="http://www.w3.org/2000/svg" style="max-width:1140px">
+  <!-- ==== garis relasi (digambar dulu, di bawah kotak) ==== -->
+  <line class="rel" x1="340" y1="129" x2="420" y2="119"/>
+  <text class="rlabel" x="362" y="110">memiliki</text>
+  <text class="card"  x="348" y="146">1</text>
+  <text class="card"  x="402" y="142">N</text>
+
+  <line class="rel" x1="720" y1="139" x2="820" y2="319"/>
+  <text class="rlabel" x="742" y="246">dipilih pada</text>
+  <text class="card"  x="728" y="156">1</text>
+  <text class="card"  x="806" y="312">N</text>
+
+  <line class="rel" x1="340" y1="349" x2="420" y2="319"/>
+  <text class="rlabel" x="356" y="322">melakukan</text>
+  <text class="card"  x="346" y="345">1</text>
+  <text class="card"  x="402" y="336">N</text>
+
+  <line class="rel" x1="720" y1="319" x2="820" y2="319"/>
+  <text class="rlabel" x="754" y="312">berisi</text>
+  <text class="card"  x="726" y="312">1</text>
+  <text class="card"  x="806" y="312">N</text>
+
+  <line class="rel" x1="340" y1="539" x2="570" y2="388"/>
+  <text class="rlabel" x="418" y="472">mencatat</text>
+  <text class="card"  x="348" y="552">1</text>
+  <text class="card"  x="552" y="404">N</text>
+
+  <line class="rel" x1="190" y1="418" x2="470" y2="480"/>
+  <text class="rlabel" x="282" y="442">mengajukan</text>
+  <text class="card"  x="196" y="436">1</text>
+  <text class="card"  x="452" y="476">N</text>
+
+  <line class="rel" x1="340" y1="579" x2="420" y2="579"/>
+  <text class="rlabel" x="350" y="572">memproses</text>
+  <text class="card"  x="344" y="596">1</text>
+  <text class="card"  x="404" y="596">N</text>
+
+  <!-- ==== entity: kategori_sampah (3 attr, 40,80) ==== -->
+  <g class="ent" transform="translate(40,80)">
+    <rect width="300" height="98" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">KATEGORI_SAMPAH</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_kategori</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">nama_kategori</text>
+    <text x="12" y="84"  font-size="13">deskripsi</text>
+  </g>
+
+  <!-- ==== entity: jenis_sampah (4 attr, 420,60) ==== -->
+  <g class="ent" transform="translate(420,60)">
+    <rect width="300" height="118" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">JENIS_SAMPAH</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_jenis</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">id_kategori (FK)</text>
+    <text x="12" y="84"  font-size="13">nama_jenis</text>
+    <text x="12" y="104" font-size="13">harga_per_kg</text>
+  </g>
+
+  <!-- ==== entity: nasabah (5 attr, 40,280) ==== -->
+  <g class="ent" transform="translate(40,280)">
+    <rect width="300" height="138" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">NASABAH</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_nasabah</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">nama</text>
+    <text x="12" y="84"  font-size="13">alamat</text>
+    <text x="12" y="104" font-size="13">no_hp</text>
+    <text x="12" y="124" font-size="13">tgl_daftar</text>
+  </g>
+
+  <!-- ==== entity: setoran (5 attr, 420,250) ==== -->
+  <g class="ent" transform="translate(420,250)">
+    <rect width="300" height="138" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">SETORAN</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_setoran</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">id_nasabah (FK)</text>
+    <text x="12" y="84"  font-size="13">id_petugas (FK)</text>
+    <text x="12" y="104" font-size="13">tgl_setoran</text>
+    <text x="12" y="124" font-size="13">catatan</text>
+  </g>
+
+  <!-- ==== entity: detail_setoran (5 attr, 820,250) ==== -->
+  <g class="ent" transform="translate(820,250)">
+    <rect width="300" height="138" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">DETAIL_SETORAN</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_detail</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">id_setoran (FK)</text>
+    <text x="12" y="84"  font-size="13">id_jenis (FK)</text>
+    <text x="12" y="104" font-size="13">berat_kg</text>
+    <text x="12" y="124" font-size="13">harga_satuan</text>
+  </g>
+
+  <!-- ==== entity: petugas (4 attr, 40,480) ==== -->
+  <g class="ent" transform="translate(40,480)">
+    <rect width="300" height="118" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">PETUGAS</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_petugas</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">nama_petugas</text>
+    <text x="12" y="84"  font-size="13">jabatan</text>
+    <text x="12" y="104" font-size="13">no_hp</text>
+  </g>
+
+  <!-- ==== entity: penarikan_saldo (5 attr, 420,480) ==== -->
+  <g class="ent" transform="translate(420,480)">
+    <rect width="300" height="138" rx="6"/>
+    <rect class="head" width="300" height="26" rx="6"/>
+    <rect class="head" y="13" width="300" height="13"/>
+    <text x="150" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">PENARIKAN_SALDO</text>
+    <text x="12" y="44"  font-size="13"><tspan font-weight="bold">id_penarikan</tspan> (PK)</text>
+    <text x="12" y="64"  font-size="13">id_nasabah (FK)</text>
+    <text x="12" y="84"  font-size="13">id_petugas (FK)</text>
+    <text x="12" y="104" font-size="13">tgl_penarikan</text>
+    <text x="12" y="124" font-size="13">jumlah</text>
+  </g>
+</svg>
+<p class="caption">Gambar 2.1 ERD Sistem Informasi Bank Sampah Digital (7 entitas, 7 relasi one-to-many)</p>
+
+<h3>2.3 Notasi Notasi Relasi (Mermaid)</h3>
+<div class="code">erDiagram
+  KATEGORI_SAMPAH   ||--o{ JENIS_SAMPAH      : memiliki
+  NASABAH           ||--o{ SETORAN           : melakukan
+  PETUGAS           ||--o{ SETORAN           : mencatat
+  SETORAN           ||--|{ DETAIL_SETORAN    : berisi
+  JENIS_SAMPAH      ||--o{ DETAIL_SETORAN    : dipilih_pada
+  NASABAH           ||--o{ PENARIKAN_SALDO   : mengajukan
+  PETUGAS           ||--o{ PENARIKAN_SALDO   : memproses</div>
+
+<!-- ============ BAGIAN 3 ============ -->
+<h2 class="pb">3. Perancangan Database: CDM dan PDM</h2>
+
+<h3>3.1 Conceptual Data Model (CDM)</h3>
+<p>CDM dibuat di PowerDesigner (File › New Model › Conceptual Data Model) berisi 7 entity dengan atribut
+dan identifier, tanpa foreign key dan tanpa tipe data — FK muncul otomatis dari relasi one-to-many berikut:</p>
+<table>
+  <tr><th>Relasi (induk → anak)</th><th>Kardinalitas</th></tr>
+  <tr><td>KATEGORI_SAMPAH → JENIS_SAMPAH</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>NASABAH → SETORAN</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>PETUGAS → SETORAN</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>SETORAN → DETAIL_SETORAN</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>JENIS_SAMPAH → DETAIL_SETORAN</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>NASABAH → PENARIKAN_SALDO</td><td>(1,1) → (0,N)</td></tr>
+  <tr><td>PETUGAS → PENARIKAN_SALDO</td><td>(1,1) → (0,N)</td></tr>
+</table>
+<div class="note">Screenshot gambar CDM hasil PowerDesigner dapat ditempel di bagian ini (lihat lampiran/panduan praktikum).</div>
+
+<h3>3.2 Physical Data Model (PDM)</h3>
+<p>PDM dihasilkan dari CDM melalui menu <b>Tools › Generate Physical Data Model</b> dengan target DBMS
+MySQL. Hasil target PDM sebagai berikut:</p>
+<table>
+  <tr><th>Tabel</th><th>Kolom (tipe)</th><th>PK</th><th>FK</th></tr>
+  <tr><td>kategori_sampah</td><td>id_kategori INT, nama_kategori VARCHAR(50), deskripsi VARCHAR(150)</td><td>id_kategori</td><td>—</td></tr>
+  <tr><td>jenis_sampah</td><td>id_jenis INT, id_kategori INT, nama_jenis VARCHAR(80), harga_per_kg DECIMAL(10,2)</td><td>id_jenis</td><td>id_kategori → kategori_sampah</td></tr>
+  <tr><td>nasabah</td><td>id_nasabah INT, nama VARCHAR(100), alamat VARCHAR(200), no_hp VARCHAR(15), tgl_daftar DATE</td><td>id_nasabah</td><td>—</td></tr>
+  <tr><td>petugas</td><td>id_petugas INT, nama_petugas VARCHAR(100), jabatan VARCHAR(50), no_hp VARCHAR(15)</td><td>id_petugas</td><td>—</td></tr>
+  <tr><td>setoran</td><td>id_setoran INT, id_nasabah INT, id_petugas INT, tgl_setoran DATE, catatan VARCHAR(150)</td><td>id_setoran</td><td>id_nasabah → nasabah, id_petugas → petugas</td></tr>
+  <tr><td>detail_setoran</td><td>id_detail INT, id_setoran INT, id_jenis INT, berat_kg DECIMAL(8,2), harga_satuan DECIMAL(10,2)</td><td>id_detail</td><td>id_setoran → setoran, id_jenis → jenis_sampah</td></tr>
+  <tr><td>penarikan_saldo</td><td>id_penarikan INT, id_nasabah INT, id_petugas INT, tgl_penarikan DATE, jumlah DECIMAL(12,2)</td><td>id_penarikan</td><td>id_nasabah → nasabah, id_petugas → petugas</td></tr>
+</table>
+<div class="note">Screenshot gambar PDM (7 tabel + garis FK) hasil generate PowerDesigner ditempel di bagian ini.</div>
+
+<!-- ============ BAGIAN 4 ============ -->
+<h2 class="pb">4. Implementasi Database (SQL DDL)</h2>
+
+<h3>4.1 Kode DDL (file 01_ddl.sql)</h3>
+<div class="code">CREATE DATABASE bank_sampah_digital;
+USE bank_sampah_digital;
+
+CREATE TABLE kategori_sampah (
+    id_kategori   INT PRIMARY KEY AUTO_INCREMENT,
+    nama_kategori VARCHAR(50)  NOT NULL,
+    deskripsi     VARCHAR(150)
+);
+
+CREATE TABLE jenis_sampah (
+    id_jenis     INT PRIMARY KEY AUTO_INCREMENT,
+    id_kategori  INT NOT NULL,
+    nama_jenis   VARCHAR(80) NOT NULL,
+    harga_per_kg DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_kategori) REFERENCES kategori_sampah(id_kategori)
+);
+
+CREATE TABLE nasabah (
+    id_nasabah INT PRIMARY KEY AUTO_INCREMENT,
+    nama       VARCHAR(100) NOT NULL,
+    alamat     VARCHAR(200),
+    no_hp      VARCHAR(15),
+    tgl_daftar DATE NOT NULL
+);
+
+CREATE TABLE petugas (
+    id_petugas   INT PRIMARY KEY AUTO_INCREMENT,
+    nama_petugas VARCHAR(100) NOT NULL,
+    jabatan      VARCHAR(50),
+    no_hp        VARCHAR(15)
+);
+
+CREATE TABLE setoran (
+    id_setoran  INT PRIMARY KEY AUTO_INCREMENT,
+    id_nasabah  INT NOT NULL,
+    id_petugas  INT NOT NULL,
+    tgl_setoran DATE NOT NULL,
+    catatan     VARCHAR(150),
+    FOREIGN KEY (id_nasabah) REFERENCES nasabah(id_nasabah),
+    FOREIGN KEY (id_petugas) REFERENCES petugas(id_petugas)
+);
+
+CREATE TABLE detail_setoran (
+    id_detail    INT PRIMARY KEY AUTO_INCREMENT,
+    id_setoran   INT NOT NULL,
+    id_jenis     INT NOT NULL,
+    berat_kg     DECIMAL(8,2) NOT NULL,
+    harga_satuan DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_setoran) REFERENCES setoran(id_setoran),
+    FOREIGN KEY (id_jenis)   REFERENCES jenis_sampah(id_jenis)
+);
+
+CREATE TABLE penarikan_saldo (
+    id_penarikan  INT PRIMARY KEY AUTO_INCREMENT,
+    id_nasabah    INT NOT NULL,
+    id_petugas    INT NOT NULL,
+    tgl_penarikan DATE NOT NULL,
+    jumlah        DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (id_nasabah) REFERENCES nasabah(id_nasabah),
+    FOREIGN KEY (id_petugas) REFERENCES petugas(id_petugas)
+);</div>
+
+<h3>4.2 Bukti Eksekusi DDL — SHOW TABLES</h3>
+<div class="termwrap">
+<div class="termbar">C:\Software\Xampp\mysql\bin\mysql.exe -u root — MariaDB [bank_sampah_digital]</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SHOW TABLES;
++-------------------------------+
+| Tables_in_bank_sampah_digital |
++-------------------------------+
+| detail_setoran                |
+| jenis_sampah                  |
+| kategori_sampah               |
+| nasabah                       |
+| penarikan_saldo               |
+| petugas                       |
+| setoran                       |
++-------------------------------+
+7 rows in set (0.001 sec)</div>
+</div>
+
+<h3>4.3 Bukti Eksekusi DDL — DESCRIBE (struktur tiap tabel)</h3>
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — DESCRIBE kategori_sampah / jenis_sampah</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; DESCRIBE kategori_sampah;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id_kategori   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_kategori | varchar(50)  | NO   |     | NULL    |                |
+| deskripsi     | varchar(150) | YES  |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+
+MariaDB [bank_sampah_digital]&gt; DESCRIBE jenis_sampah;
++--------------+---------------+------+-----+---------+----------------+
+| Field        | Type          | Null | Key | Default | Extra          |
++--------------+---------------+------+-----+---------+----------------+
+| id_jenis     | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_kategori  | int(11)       | NO   | MUL | NULL    |                |
+| nama_jenis   | varchar(80)   | NO   |     | NULL    |                |
+| harga_per_kg | decimal(10,2) | NO   |     | NULL    |                |
++--------------+---------------+------+-----+---------+----------------+</div>
+</div>
+
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — DESCRIBE nasabah / petugas</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; DESCRIBE nasabah;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id_nasabah | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama       | varchar(100) | NO   |     | NULL    |                |
+| alamat     | varchar(200) | YES  |     | NULL    |                |
+| no_hp      | varchar(15)  | YES  |     | NULL    |                |
+| tgl_daftar | date         | NO   |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+MariaDB [bank_sampah_digital]&gt; DESCRIBE petugas;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id_petugas   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_petugas | varchar(100) | NO   |     | NULL    |                |
+| jabatan      | varchar(50)  | YES  |     | NULL    |                |
+| no_hp        | varchar(15)  | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+</div>
+</div>
+
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — DESCRIBE setoran / detail_setoran</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; DESCRIBE setoran;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id_setoran  | int(11)      | NO   | PRI | NULL    | auto_increment |
+| id_nasabah  | int(11)      | NO   | MUL | NULL    |                |
+| id_petugas  | int(11)      | NO   | MUL | NULL    |                |
+| tgl_setoran | date         | NO   |     | NULL    |                |
+| catatan     | varchar(150) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+MariaDB [bank_sampah_digital]&gt; DESCRIBE detail_setoran;
++--------------+---------------+------+-----+---------+----------------+
+| Field        | Type          | Null | Key | Default | Extra          |
++--------------+---------------+------+-----+---------+----------------+
+| id_detail    | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_setoran   | int(11)       | NO   | MUL | NULL    |                |
+| id_jenis     | int(11)       | NO   | MUL | NULL    |                |
+| berat_kg     | decimal(8,2)  | NO   |     | NULL    |                |
+| harga_satuan | decimal(10,2) | NO   |     | NULL    |                |
++--------------+---------------+------+-----+---------+----------------+</div>
+</div>
+
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — DESCRIBE penarikan_saldo</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; DESCRIBE penarikan_saldo;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| id_penarikan  | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_nasabah    | int(11)       | NO   | MUL | NULL    |                |
+| id_petugas    | int(11)       | NO   | MUL | NULL    |                |
+| tgl_penarikan | date          | NO   |     | NULL    |                |
+| jumlah        | decimal(12,2) | NO   |     | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+</div>
+</div>
+<p class="caption">Key = PRI artinya primary key; Key = MUL pada kolom id_kategori, id_nasabah, id_petugas,
+id_setoran, id_jenis menandakan kolom tersebut menjadi foreign key.</p>
+
+<!-- ============ BAGIAN 5 ============ -->
+<h2 class="pb">5. Pengisian Data (SQL DML)</h2>
+
+<h3>5.1 Kode INSERT (file 02_dml_insert.sql)</h3>
+<div class="code">INSERT INTO kategori_sampah (id_kategori, nama_kategori, deskripsi) VALUES
+(1, 'Plastik',    'Botol, gelas, dan kemasan plastik'),
+(2, 'Kertas',     'Kardus, HVS, koran'),
+(3, 'Logam',      'Kaleng dan besi bekas'),
+(4, 'Kaca',       'Botol dan pecahan kaca'),
+(5, 'Elektronik', 'Kabel dan komponen bekas');
+
+INSERT INTO jenis_sampah (id_jenis, id_kategori, nama_jenis, harga_per_kg) VALUES
+(1, 1, 'Botol PET',        3500),
+(2, 1, 'Gelas plastik',    2500),
+(3, 2, 'Kardus',           2000),
+(4, 2, 'Kertas HVS',       2500),
+(5, 3, 'Kaleng aluminium', 9000),
+(6, 3, 'Besi tua',         4000),
+(7, 4, 'Botol kaca',        500),
+(8, 5, 'Kabel bekas',      6000);
+
+INSERT INTO nasabah (id_nasabah, nama, alamat, no_hp, tgl_daftar) VALUES
+(1, 'Siti Aminah',   'Jl. Melati No. 5, Semarang',   '081234560001', '2026-09-01'),
+(2, 'Budi Santoso',  'Jl. Kenanga No. 12, Semarang', '081234560002', '2026-09-03'),
+(3, 'Dewi Lestari',  'Jl. Mawar No. 8, Semarang',    '081234560003', '2026-09-05'),
+(4, 'Rizky Pratama', 'Jl. Anggrek No. 21, Semarang', '081234560004', '2026-09-10'),
+(5, 'Nur Hidayah',   'Jl. Cempaka No. 3, Semarang',  '081234560005', '2026-09-12'),
+(6, 'Agus Wijaya',   'Jl. Dahlia No. 17, Semarang',  '081234560006', '2026-09-15');
+
+INSERT INTO petugas (id_petugas, nama_petugas, jabatan, no_hp) VALUES
+(1, 'Hendra Kusuma',  'Penimbang',   '082111110001'),
+(2, 'Lilis Suryani',  'Pencatat',    '082111110002'),
+(3, 'Taufik Hidayat', 'Penimbang',   '082111110003'),
+(4, 'Mega Putri',     'Kasir',       '082111110004'),
+(5, 'Joko Susilo',    'Koordinator', '082111110005');
+
+INSERT INTO setoran (id_setoran, id_nasabah, id_petugas, tgl_setoran, catatan) VALUES
+(1, 1, 1, '2026-10-01', 'Setoran rutin'),
+(2, 2, 2, '2026-10-03', 'Logam dari bengkel'),
+(3, 3, 1, '2026-10-05', 'Kertas kantor'),
+(4, 1, 3, '2026-10-08', NULL),
+(5, 4, 2, '2026-10-10', 'Elektronik bekas'),
+(6, 5, 4, '2026-10-12', 'Kardus toko'),
+(7, 2, 1, '2026-10-15', NULL),
+(8, 6, 5, '2026-10-18', 'Besi tua proyek');
+
+INSERT INTO detail_setoran (id_detail, id_setoran, id_jenis, berat_kg, harga_satuan) VALUES
+(1,  1, 1,  5.00, 3500),
+(2,  1, 3,  8.00, 2000),
+(3,  2, 5,  2.50, 9000),
+(4,  2, 6, 10.00, 4000),
+(5,  3, 4,  6.00, 2500),
+(6,  3, 3, 12.00, 2000),
+(7,  4, 2,  4.00, 2500),
+(8,  4, 7, 15.00,  500),
+(9,  5, 1,  7.50, 3500),
+(10, 5, 8,  3.00, 6000),
+(11, 6, 3, 20.00, 2000),
+(12, 7, 1,  6.00, 3500),
+(13, 7, 5,  1.50, 9000),
+(14, 8, 6, 25.00, 4000),
+(15, 8, 7, 10.00,  500);
+
+INSERT INTO penarikan_saldo (id_penarikan, id_nasabah, id_petugas, tgl_penarikan, jumlah) VALUES
+(1, 1, 1, '2026-10-20', 30000),
+(2, 2, 2, '2026-10-22', 50000),
+(3, 3, 3, '2026-10-23', 20000),
+(4, 4, 4, '2026-10-25', 25000),
+(5, 5, 5, '2026-10-26', 20000);</div>
+<p class="caption">Urutan INSERT mengikuti ketergantungan foreign key: tabel induk (kategori, nasabah,
+petugas) diisi lebih dulu, baru tabel anak (jenis, setoran, detail_setoran, penarikan_saldo).</p>
+
+<h3>5.2 Bukti Eksekusi INSERT — SELECT * tiap tabel</h3>
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — SELECT * kategori_sampah / jenis_sampah</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SELECT * FROM kategori_sampah;
++-------------+---------------+-----------------------------------+
+| id_kategori | nama_kategori | deskripsi                         |
++-------------+---------------+-----------------------------------+
+|           1 | Plastik       | Botol, gelas, dan kemasan plastik |
+|           2 | Kertas        | Kardus, HVS, koran                |
+|           3 | Logam         | Kaleng dan besi bekas             |
+|           4 | Kaca          | Botol dan pecahan kaca            |
+|           5 | Elektronik    | Kabel dan komponen bekas          |
++-------------+---------------+-----------------------------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM jenis_sampah;
++----------+-------------+------------------+--------------+
+| id_jenis | id_kategori | nama_jenis       | harga_per_kg |
++----------+-------------+------------------+--------------+
+|        1 |           1 | Botol PET        |      3500.00 |
+|        2 |           1 | Gelas plastik    |      2500.00 |
+|        3 |           2 | Kardus           |      2000.00 |
+|        4 |           2 | Kertas HVS       |      2500.00 |
+|        5 |           3 | Kaleng aluminium |      9000.00 |
+|        6 |           3 | Besi tua         |      4000.00 |
+|        7 |           4 | Botol kaca       |       500.00 |
+|        8 |           5 | Kabel bekas      |      6000.00 |
++----------+-------------+------------------+--------------+</div>
+</div>
+
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — SELECT * nasabah (sebelum UPDATE) / petugas</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SELECT * FROM nasabah;
++------------+---------------+------------------------------+--------------+------------+
+| id_nasabah | nama          | alamat                       | no_hp        | tgl_daftar |
++------------+---------------+------------------------------+--------------+------------+
+|          1 | Siti Aminah   | Jl. Melati No. 5, Semarang   | 081234560001 | 2026-09-01 |
+|          2 | Budi Santoso  | Jl. Kenanga No. 12, Semarang | 081234560002 | 2026-09-03 |
+|          3 | Dewi Lestari  | Jl. Mawar No. 8, Semarang    | 081234560003 | 2026-09-05 |
+|          4 | Rizky Pratama | Jl. Anggrek No. 21, Semarang | 081234560004 | 2026-09-10 |
+|          5 | Nur Hidayah   | Jl. Cempaka No. 3, Semarang  | 081234560005 | 2026-09-12 |
+|          6 | Agus Wijaya   | Jl. Dahlia No. 17, Semarang  | 081234560006 | 2026-09-15 |
++------------+---------------+------------------------------+--------------+------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM petugas;
++------------+----------------+-------------+--------------+
+| id_petugas | nama_petugas   | jabatan     | no_hp        |
++------------+----------------+-------------+--------------+
+|          1 | Hendra Kusuma  | Penimbang   | 082111110001 |
+|          2 | Lilis Suryani  | Pencatat    | 082111110002 |
+|          3 | Taufik Hidayat | Penimbang   | 082111110003 |
+|          4 | Mega Putri     | Kasir       | 082111110004 |
+|          5 | Joko Susilo    | Koordinator | 082111110005 |
++------------+----------------+-------------+--------------+</div>
+</div>
+
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — SELECT * setoran / detail_setoran / penarikan_saldo</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SELECT * FROM setoran;
++------------+------------+------------+-------------+--------------------+
+| id_setoran | id_nasabah | id_petugas | tgl_setoran | catatan            |
++------------+------------+------------+-------------+--------------------+
+|          1 |          1 |          1 | 2026-10-01  | Setoran rutin      |
+|          2 |          2 |          2 | 2026-10-03  | Logam dari bengkel |
+|          3 |          3 |          1 | 2026-10-05  | Kertas kantor      |
+|          4 |          1 |          3 | 2026-10-08  | NULL               |
+|          5 |          4 |          2 | 2026-10-10  | Elektronik bekas   |
+|          6 |          5 |          4 | 2026-10-12  | Kardus toko        |
+|          7 |          2 |          1 | 2026-10-15  | NULL               |
+|          8 |          6 |          5 | 2026-10-18  | Besi tua proyek    |
++------------+------------+------------+-------------+--------------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM detail_setoran;
++-----------+------------+----------+----------+--------------+
+| id_detail | id_setoran | id_jenis | berat_kg | harga_satuan |
++-----------+------------+----------+----------+--------------+
+|         1 |          1 |        1 |     5.00 |      3500.00 |
+|         2 |          1 |        3 |     8.00 |      2000.00 |
+|         3 |          2 |        5 |     2.50 |      9000.00 |
+|         4 |          2 |        6 |    10.00 |      4000.00 |
+|         5 |          3 |        4 |     6.00 |      2500.00 |
+|         6 |          3 |        3 |    12.00 |      2000.00 |
+|         7 |          4 |        2 |     4.00 |      2500.00 |
+|         8 |          4 |        7 |    15.00 |       500.00 |
+|         9 |          5 |        1 |     7.50 |      3500.00 |
+|        10 |          5 |        8 |     3.00 |      6000.00 |
+|        11 |          6 |        3 |    20.00 |      2000.00 |
+|        12 |          7 |        1 |     6.00 |      3500.00 |
+|        13 |          7 |        5 |     1.50 |      9000.00 |
+|        14 |          8 |        6 |    25.00 |      4000.00 |
+|        15 |          8 |        7 |    10.00 |       500.00 |
++-----------+------------+----------+----------+--------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM penarikan_saldo;
++--------------+------------+------------+---------------+----------+
+| id_penarikan | id_nasabah | id_petugas | tgl_penarikan | jumlah   |
++--------------+------------+------------+---------------+----------+
+|            1 |          1 |          1 | 2026-10-20    | 30000.00 |
+|            2 |          2 |          2 | 2026-10-22    | 50000.00 |
+|            3 |          3 |          3 | 2026-10-23    | 20000.00 |
+|            4 |          4 |          4 | 2026-10-25    | 25000.00 |
+|            5 |          5 |          5 | 2026-10-26    | 20000.00 |
++--------------+------------+------------+---------------+----------+</div>
+</div>
+
+<h3>5.3 Manipulasi Data: UPDATE dan DELETE (file 03_update_delete.sql)</h3>
+<div class="code">-- UPDATE
+UPDATE jenis_sampah SET harga_per_kg = 3700 WHERE id_jenis = 1;
+UPDATE nasabah SET no_hp = '081299990002' WHERE id_nasabah = 2;
+UPDATE petugas SET jabatan = 'Koordinator Lapangan' WHERE id_petugas = 3;
+
+-- DELETE (pakai data uji supaya tidak melanggar foreign key)
+INSERT INTO nasabah VALUES (7, 'Nasabah Uji', 'Jl. Uji No. 1', '080000000000', '2026-10-30');
+DELETE FROM nasabah WHERE id_nasabah = 7;</div>
+
+<h4>Bukti kondisi SEBELUM UPDATE:</h4>
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — kondisi sebelum UPDATE / DELETE</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SELECT id_jenis, nama_jenis, harga_per_kg FROM jenis_sampah WHERE id_jenis = 1;
++----------+------------+--------------+
+| id_jenis | nama_jenis | harga_per_kg |
++----------+------------+--------------+
+|        1 | Botol PET  |      3500.00 |
++----------+------------+--------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT id_nasabah, nama, no_hp FROM nasabah WHERE id_nasabah = 2;
++------------+--------------+--------------+
+| id_nasabah | nama         | no_hp        |
++------------+--------------+--------------+
+|          2 | Budi Santoso | 081234560002 |
++------------+--------------+--------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT id_petugas, nama_petugas, jabatan FROM petugas WHERE id_petugas = 3;
++------------+----------------+-----------+
+| id_petugas | nama_petugas   | jabatan   |
++------------+----------------+-----------+
+|          3 | Taufik Hidayat | Penimbang |
++------------+----------------+-----------+</div>
+</div>
+
+<h4>Bukti kondisi SESUDAH UPDATE dan DELETE:</h4>
+<div class="termwrap">
+<div class="termbar">MariaDB [bank_sampah_digital] — kondisi sesudah UPDATE / DELETE</div>
+<div class="term">MariaDB [bank_sampah_digital]&gt; SELECT id_jenis, nama_jenis, harga_per_kg FROM jenis_sampah WHERE id_jenis = 1;
++----------+------------+--------------+
+| id_jenis | nama_jenis | harga_per_kg |
++----------+------------+--------------+
+|        1 | Botol PET  |      3700.00 |
++----------+------------+--------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT id_nasabah, nama, no_hp FROM nasabah WHERE id_nasabah = 2;
++------------+--------------+--------------+
+| id_nasabah | nama         | no_hp        |
++------------+--------------+--------------+
+|          2 | Budi Santoso | 081299990002 |
++------------+--------------+--------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT id_petugas, nama_petugas, jabatan FROM petugas WHERE id_petugas = 3;
++------------+----------------+----------------------+
+| id_petugas | nama_petugas   | jabatan              |
++------------+----------------+----------------------+
+|          3 | Taufik Hidayat | Koordinator Lapangan |
++------------+----------------+----------------------+
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM nasabah WHERE id_nasabah = 7;
+Empty set
+
+MariaDB [bank_sampah_digital]&gt; SELECT * FROM nasabah;
++------------+---------------+------------------------------+--------------+------------+
+| id_nasabah | nama          | alamat                       | no_hp        | tgl_daftar |
++------------+---------------+------------------------------+--------------+------------+
+|          1 | Siti Aminah   | Jl. Melati No. 5, Semarang   | 081234560001 | 2026-09-01 |
+|          2 | Budi Santoso  | Jl. Kenanga No. 12, Semarang | 081299990002 | 2026-09-03 |
+|          3 | Dewi Lestari  | Jl. Mawar No. 8, Semarang    | 081234560003 | 2026-09-05 |
+|          4 | Rizky Pratama | Jl. Anggrek No. 21, Semarang | 081234560004 | 2026-09-10 |
+|          5 | Nur Hidayah   | Jl. Cempaka No. 3, Semarang  | 081234560005 | 2026-09-12 |
+|          6 | Agus Wijaya   | Jl. Dahlia No. 17, Semarang  | 081234560006 | 2026-09-15 |
++------------+---------------+------------------------------+--------------+------------+</div>
+</div>
+<p class="caption">Pembuktian keputusan desain: harga botol PET sudah di-UPDATE menjadi 3.700 pada master
+jenis_sampah, namun subtotal setoran lama tetap dipakai harga 3.500 karena harga saat transaksi
+(harga_satuan) tersimpan di detail_setoran (consep snapshot harga). Data uji 'Nasabah Uji'
+(id = 7) berhasil dimasukkan lalu dihapus tanpa melanggar foreign key.</p>
+
+<!-- ============ BAGIAN 6 ============ -->
+<h2 class="pb">6. Pengujian Query SQL (Q1–Q10)</h2>
+<table>
+  <tr><th>Query</th><th>Konsep yang diuji</th></tr>
+  <tr><td>Q1</td><td>SELECT dasar</td></tr>
+  <tr><td>Q2</td><td>WHERE (filter) dan ORDER BY</td></tr>
+  <tr><td>Q3</td><td>JOIN 3 tabel</td></tr>
+  <tr><td>Q4</td><td>JOIN 4 tabel</td></tr>
+  <tr><td>Q5</td><td>Agregasi SUM + GROUP BY</td></tr>
+  <tr><td>Q6</td><td>Agregasi per kategori (JOIN + GROUP BY)</td></tr>
+  <tr><td>Q7</td><td>GROUP BY + HAVING</td></tr>
+  <tr><td>Q8</td><td>LEFT JOIN + COUNT</td></tr>
+  <tr><td>Q9</td><td>Subquery + LEFT JOIN + COALESCE (perhitungan saldo)</td></tr>
+  <tr><td>Q10</td><td>LEFT JOIN + IS NULL</td></tr>
+</table>
+
+<h3>Q1 — Tampilkan semua nasabah</h3>
+<div class="code">SELECT * FROM nasabah;</div>
+<div class="termwrap">
+<div class="term">RESULT (6 rows):
++------------+---------------+------------------------------+--------------+------------+
+| id_nasabah | nama          | alamat                       | no_hp        | tgl_daftar |
++------------+---------------+------------------------------+--------------+------------+
+|          1 | Siti Aminah   | Jl. Melati No. 5, Semarang   | 081234560001 | 2026-09-01 |
+|          2 | Budi Santoso  | Jl. Kenanga No. 12, Semarang | 081299990002 | 2026-09-03 |
+|          3 | Dewi Lestari  | Jl. Mawar No. 8, Semarang    | 081234560003 | 2026-09-05 |
+|          4 | Rizky Pratama | Jl. Anggrek No. 21, Semarang | 081234560004 | 2026-09-10 |
+|          5 | Nur Hidayah   | Jl. Cempaka No. 3, Semarang  | 081234560005 | 2026-09-12 |
+|          6 | Agus Wijaya   | Jl. Dahlia No. 17, Semarang  | 081234560006 | 2026-09-15 |
++------------+---------------+------------------------------+--------------+------------+</div>
+</div>
+
+<h3>Q2 — Filter harga di atas 3000, urut dari harga tertinggi (WHERE + ORDER BY)</h3>
+<div class="code">SELECT nama_jenis, harga_per_kg
+FROM jenis_sampah
+WHERE harga_per_kg &gt; 3000
+ORDER BY harga_per_kg DESC;</div>
+<div class="termwrap">
+<div class="term">RESULT (4 rows):
++------------------+--------------+
+| nama_jenis       | harga_per_kg |
++------------------+--------------+
+| Kaleng aluminium |      9000.00 |
+| Kabel bekas      |      6000.00 |
+| Besi tua         |      4000.00 |
+| Botol PET        |      3700.00 |
++------------------+--------------+</div>
+</div>
+
+<h3>Q3 — JOIN 3 tabel: setoran beserta nama nasabah dan petugas</h3>
+<div class="code">SELECT s.id_setoran, s.tgl_setoran, n.nama AS nasabah, p.nama_petugas AS petugas
+FROM setoran s
+JOIN nasabah n ON s.id_nasabah = n.id_nasabah
+JOIN petugas p ON s.id_petugas = p.id_petugas
+ORDER BY s.tgl_setoran;</div>
+<div class="termwrap">
+<div class="term">RESULT (8 rows):
++------------+-------------+---------------+----------------+
+| id_setoran | tgl_setoran | nasabah       | petugas        |
++------------+-------------+---------------+----------------+
+|          1 | 2026-10-01  | Siti Aminah   | Hendra Kusuma  |
+|          2 | 2026-10-03  | Budi Santoso  | Lilis Suryani  |
+|          3 | 2026-10-05  | Dewi Lestari  | Hendra Kusuma  |
+|          4 | 2026-10-08  | Siti Aminah   | Taufik Hidayat |
+|          5 | 2026-10-10  | Rizky Pratama | Lilis Suryani  |
+|          6 | 2026-10-12  | Nur Hidayah   | Mega Putri     |
+|          7 | 2026-10-15  | Budi Santoso  | Hendra Kusuma  |
+|          8 | 2026-10-18  | Agus Wijaya   | Joko Susilo    |
++------------+-------------+---------------+----------------+</div>
+</div>
+
+<h3>Q4 — JOIN 4 tabel: rincian lengkap tiap setoran</h3>
+<div class="code">SELECT s.id_setoran, n.nama, k.nama_kategori, j.nama_jenis,
+       d.berat_kg, d.harga_satuan,
+       d.berat_kg * d.harga_satuan AS subtotal
+FROM detail_setoran d
+JOIN setoran s         ON d.id_setoran  = s.id_setoran
+JOIN nasabah n         ON s.id_nasabah  = n.id_nasabah
+JOIN jenis_sampah j    ON d.id_jenis    = j.id_jenis
+JOIN kategori_sampah k ON j.id_kategori = k.id_kategori
+ORDER BY s.id_setoran;</div>
+<div class="termwrap">
+<div class="term">RESULT (15 rows):
++------------+---------------+---------------+------------------+----------+--------------+-------------+
+| id_setoran | nama          | nama_kategori | nama_jenis       | berat_kg | harga_satuan | subtotal    |
++------------+---------------+---------------+------------------+----------+--------------+-------------+
+|          1 | Siti Aminah   | Kertas        | Kardus           |     8.00 |      2000.00 |  16000.0000 |
+|          1 | Siti Aminah   | Plastik       | Botol PET        |     5.00 |      3500.00 |  17500.0000 |
+|          2 | Budi Santoso  | Logam         | Kaleng aluminium |     2.50 |      9000.00 |  22500.0000 |
+|          2 | Budi Santoso  | Logam         | Besi tua         |    10.00 |      4000.00 |  40000.0000 |
+|          3 | Dewi Lestari  | Kertas        | Kardus           |    12.00 |      2000.00 |  24000.0000 |
+|          3 | Dewi Lestari  | Kertas        | Kertas HVS       |     6.00 |      2500.00 |  15000.0000 |
+|          4 | Siti Aminah   | Plastik       | Gelas plastik    |     4.00 |      2500.00 |  10000.0000 |
+|          4 | Siti Aminah   | Kaca          | Botol kaca       |    15.00 |       500.00 |   7500.0000 |
+|          5 | Rizky Pratama | Elektronik    | Kabel bekas      |     3.00 |      6000.00 |  18000.0000 |
+|          5 | Rizky Pratama | Plastik       | Botol PET        |     7.50 |      3500.00 |  26250.0000 |
+|          6 | Nur Hidayah   | Kertas        | Kardus           |    20.00 |      2000.00 |  40000.0000 |
+|          7 | Budi Santoso  | Logam         | Kaleng aluminium |     1.50 |      9000.00 |  13500.0000 |
+|          7 | Budi Santoso  | Plastik       | Botol PET        |     6.00 |      3500.00 |  21000.0000 |
+|          8 | Agus Wijaya   | Logam         | Besi tua         |    25.00 |      4000.00 | 100000.0000 |
+|          8 | Agus Wijaya   | Kaca          | Botol kaca       |    10.00 |       500.00 |   5000.0000 |
++------------+---------------+---------------+------------------+----------+--------------+-------------+</div>
+</div>
+<p class="caption">Catatan: pada setoran lama (id 5 dan 7) Botol PET tetap berharga_satuan 3.500
+walaupun master harga kini 3.700 — sesuai keputusan desain snapshot harga (bagian 1.4).</p>
+
+<h3>Q5 — Rekap total berat dan nilai per setoran (SUM + GROUP BY)</h3>
+<div class="code">SELECT id_setoran, SUM(berat_kg) AS total_kg,
+       SUM(berat_kg * harga_satuan) AS total_nilai
+FROM detail_setoran
+GROUP BY id_setoran;</div>
+<div class="termwrap">
+<div class="term">RESULT (8 rows):
++------------+----------+-------------+
+| id_setoran | total_kg | total_nilai |
++------------+----------+-------------+
+|          1 |    13.00 |  33500.0000 |
+|          2 |    12.50 |  62500.0000 |
+|          3 |    18.00 |  39000.0000 |
+|          4 |    19.00 |  17500.0000 |
+|          5 |    10.50 |  44250.0000 |
+|          6 |    20.00 |  40000.0000 |
+|          7 |     7.50 |  34500.0000 |
+|          8 |    35.00 | 105000.0000 |
++------------+----------+-------------+</div>
+</div>
+
+<h3>Q6 — Rekap total berat per kategori</h3>
+<div class="code">SELECT k.nama_kategori, SUM(d.berat_kg) AS total_kg
+FROM detail_setoran d
+JOIN jenis_sampah j    ON d.id_jenis    = j.id_jenis
+JOIN kategori_sampah k ON j.id_kategori = k.id_kategori
+GROUP BY k.nama_kategori
+ORDER BY total_kg DESC;</div>
+<div class="termwrap">
+<div class="term">RESULT (5 rows):
++---------------+----------+
+| nama_kategori | total_kg |
++---------------+----------+
+| Kertas        |    46.00 |
+| Logam         |    39.00 |
+| Kaca          |    25.00 |
+| Plastik       |    22.50 |
+| Elektronik    |     3.00 |
++---------------+----------+</div>
+</div>
+
+<h3>Q7 — HAVING: nasabah dengan total setoran di atas 50.000</h3>
+<div class="code">SELECT n.nama, SUM(d.berat_kg * d.harga_satuan) AS total_setor
+FROM nasabah n
+JOIN setoran s        ON n.id_nasabah = s.id_nasabah
+JOIN detail_setoran d ON s.id_setoran = d.id_setoran
+GROUP BY n.id_nasabah, n.nama
+HAVING total_setor &gt; 50000
+ORDER BY total_setor DESC;</div>
+<div class="termwrap">
+<div class="term">RESULT (3 rows):
++--------------+-------------+
+| nama         | total_setor |
++--------------+-------------+
+| Agus Wijaya  | 105000.0000 |
+| Budi Santoso |  97000.0000 |
+| Siti Aminah  |  51000.0000 |
++--------------+-------------+</div>
+</div>
+
+<h3>Q8 — Jumlah setoran per petugas (LEFT JOIN + COUNT)</h3>
+<div class="code">SELECT p.nama_petugas, COUNT(s.id_setoran) AS jumlah_setoran
+FROM petugas p
+LEFT JOIN setoran s ON p.id_petugas = s.id_petugas
+GROUP BY p.id_petugas, p.nama_petugas;</div>
+<div class="termwrap">
+<div class="term">RESULT (5 rows):
++----------------+----------------+
+| nama_petugas   | jumlah_setoran |
++----------------+----------------+
+| Hendra Kusuma  |              3 |
+| Lilis Suryani  |              2 |
+| Taufik Hidayat |              1 |
+| Mega Putri     |              1 |
+| Joko Susilo    |              1 |
++----------------+----------------+</div>
+</div>
+
+<h3>Q9 — Saldo tiap nasabah (subquery + LEFT JOIN + COALESCE): setoran dikurangi penarikan</h3>
+<div class="code">SELECT n.id_nasabah, n.nama,
+       COALESCE(s.total_setor, 0) AS total_setor,
+       COALESCE(t.total_tarik, 0) AS total_tarik,
+       COALESCE(s.total_setor, 0) - COALESCE(t.total_tarik, 0) AS saldo
+FROM nasabah n
+LEFT JOIN (
+    SELECT st.id_nasabah, SUM(d.berat_kg * d.harga_satuan) AS total_setor
+    FROM setoran st
+    JOIN detail_setoran d ON st.id_setoran = d.id_setoran
+    GROUP BY st.id_nasabah
+) s ON n.id_nasabah = s.id_nasabah
+LEFT JOIN (
+    SELECT id_nasabah, SUM(jumlah) AS total_tarik
+    FROM penarikan_saldo
+    GROUP BY id_nasabah
+) t ON n.id_nasabah = t.id_nasabah;</div>
+<div class="termwrap">
+<div class="term">RESULT (6 rows):
++------------+---------------+-------------+-------------+-------------+
+| id_nasabah | nama          | total_setor | total_tarik | saldo       |
++------------+---------------+-------------+-------------+-------------+
+|          1 | Siti Aminah   |  51000.0000 |    30000.00 |  21000.0000 |
+|          2 | Budi Santoso  |  97000.0000 |    50000.00 |  47000.0000 |
+|          3 | Dewi Lestari  |  39000.0000 |    20000.00 |  19000.0000 |
+|          4 | Rizky Pratama |  44250.0000 |    25000.00 |  19250.0000 |
+|          5 | Nur Hidayah   |  40000.0000 |    20000.00 |  20000.0000 |
+|          6 | Agus Wijaya   | 105000.0000 |        0.00 | 105000.0000 |
++------------+---------------+-------------+-------------+-------------+</div>
+</div>
+
+<h3>Q10 — Nasabah yang belum pernah menarik saldo (LEFT JOIN + IS NULL)</h3>
+<div class="code">SELECT n.nama
+FROM nasabah n
+LEFT JOIN penarikan_saldo ps ON n.id_nasabah = ps.id_nasabah
+WHERE ps.id_penarikan IS NULL;</div>
+<div class="termwrap">
+<div class="term">RESULT (1 row):
++-------------+
+| nama        |
++-------------+
+| Agus Wijaya |
++-------------+</div>
+</div>
+
+<!-- ============ KESIMPULAN ============ -->
+<h2 class="pb">7. Kesimpulan</h2>
+<ol class="bullet">
+  <li>Sistem informasi bank sampah digital berhasil dirancang dan diimplementasikan dalam database MySQL
+  dengan <b>7 tabel saling berelasi</b> melalui 7 foreign key dan total 52 baris data simulasi
+  (5–15 baris per tabel), memenuhi seluruh ketentuan tugas.</li>
+  <li>Proses perancangan berurutan dari ERD → CDM → PDM → implementasi DDL/DML dilakukan dengan konsisten;
+  perancangan konsep di CDM menghasilkan struktur fisik di PDM yang identik dengan hasil CREATE TABLE,
+  terbukti dari hasil SHOW TABLES dan DESCRIBE.</li>
+  <li>Keputusan menyimpan <b>harga_satuan (snapshot) di detail_setoran</b> terbukti menjaga konsistensi
+  riwayat: setelah harga master botol PET diubah menjadi 3.700, nilai transaksi lama tidak berubah.</li>
+  <li>Saldo nasabah dihitung melalui query (total setoran − total penarikan) tanpa kolom saldo tersimpan,
+  sehingga tidak ada data ganda dan hasil selalu akurat (Q9). Lap Q10 menunjukkan konsep LEFT JOIN +
+  IS NULL untuk mendeteksi nasabah yang belum pernah menarik saldo, yaitu Agus Wijaya.</li>
+  <li>10 query pengujian berhasil menampilkan, menggabungkan (JOIN 3–4 tabel), memfilter (WHERE,
+  HAVING), dan merekapitulasi (GROUP BY + SUM/COUNT) data sesuai kebutuhan sistem.</li>
+</ol>
+
+<p style="margin-top:30pt; font-size:10pt; color:#666; border-top:1px solid #ccc; padding-top:6pt;">
+Sistem Informasi Bank Sampah Digital — Zian Mustofa · TIF 3A · NIM 25080960002 — DBMS: MySQL/MariaDB (XAMPP)
+</p>
+
+</body>
+</html>
