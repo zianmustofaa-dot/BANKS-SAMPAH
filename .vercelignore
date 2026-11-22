@@ -1,0 +1,26 @@
+# File yang tidak perlu di-upload ke Vercel (mempercepat deployment)
+# File tetap aman tersimpan di GitHub, hanya tidak ikut proses build/deploy.
+
+# Laporan & dokumentasi
+laporan-tugas3/
+laporan_bank_sampah.html
+Laporan_BankSampah_*.pdf
+
+# Skrip SQL dokumentasi di root (bukan bagian aplikasi)
+/01_ddl.sql
+/02_dml_insert.sql
+/03_update_delete.sql
+/04_queries.sql
+/05_upgrade_prod.sql
+
+# Artefak lokal / hasil generate
+**/node_modules/
+**/.next/
+**/.vercel/
+**/tests/results.json
+**/*.log
+
+# Meta
+.git/
+.gitignore
+.vscode/
